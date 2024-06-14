@@ -47,9 +47,9 @@ public class App extends JFrame {
 
       //Preenche o modelo com os dados resultantes da consulta
         while(result.next()) {
-            Object[] row = new Object[columns + 1];
-            for(int i = 1; i < columns; i++)
-              row[i] = result.getObject(i);
+            Object[] row = new Object[columns];
+            for(int i = 0; i < columns; i++)
+              row[i] = result.getObject(i+1);
 
             model.addRow(row);
         }
@@ -61,7 +61,6 @@ public class App extends JFrame {
       return null;
     }
     return new JTable(model);
-
   }
 
   private Connection connect() {
