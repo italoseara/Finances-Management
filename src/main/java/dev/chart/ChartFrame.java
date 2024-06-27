@@ -1,6 +1,5 @@
-package dev;
+package dev.chart;
 
-import dev.chart.BarChart;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JFrame;
