@@ -1,6 +1,6 @@
 package dev.chart;
 
-import dev.theme.DefaultTheme;
+import dev.style.DefaultTheme;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.lang.reflect.Field;

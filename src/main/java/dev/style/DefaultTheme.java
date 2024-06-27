@@ -1,4 +1,4 @@
-package dev.theme;
+package dev.style;
 
 import java.awt.Color;
 import java.awt.Font;
