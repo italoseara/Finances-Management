@@ -16,7 +16,7 @@ public class App extends JFrame {
   public App() {
     loadFonts();
 
-    ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/logo.png")));
+    ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/img/logo.png")));
     setTitle("Spendwise - Budget Manager");
     setIconImage(icon.getImage());
 
@@ -29,7 +29,7 @@ public class App extends JFrame {
     add(leftPanel);
     add(mainPanel);
 
-    addComponentListener(new AppAdapter());
+    addComponentListener(new AppListener());
     setVisible(true);
   }
 
@@ -43,7 +43,7 @@ public class App extends JFrame {
     }
   }
 
-  private class AppAdapter extends ComponentAdapter {
+  private class AppListener extends ComponentAdapter {
     @Override
     public void componentResized(ComponentEvent e) {
       int width = getWidth();

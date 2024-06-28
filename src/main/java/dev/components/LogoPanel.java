@@ -17,11 +17,11 @@ public class LogoPanel extends JPanel {
   public LogoPanel() {
     setBackground(new Color(0, 0, 0, 0));
     setPreferredSize(new Dimension(300, 55));
+    setMaximumSize(new Dimension(310, 55));
     setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, new Color(0xe4e4e7)));
 
     // Create the logo icon
-    JLabel leftIcon = new JLabel(
-        new ImageIcon(getIcon().getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
+    JLabel leftIcon = new JLabel(getIcon());
     leftIcon.setBounds(20, 60, 260, 260);
     add(leftIcon);
 
@@ -36,6 +36,7 @@ public class LogoPanel extends JPanel {
   }
 
   private ImageIcon getIcon() {
-    return new ImageIcon(Objects.requireNonNull(getClass().getResource("/logo.png")));
+    ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/img/logo.png")));
+    return new ImageIcon(icon.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH));
   }
 }
