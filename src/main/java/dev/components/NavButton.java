@@ -1,5 +1,6 @@
 package dev.components;
 
+import dev.App;
 import dev.manager.FontManager;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -15,6 +16,8 @@ import java.awt.event.MouseEvent;
 import java.util.Objects;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 public class NavButton extends JButton {
   private final int radius = 15;
@@ -28,8 +31,13 @@ public class NavButton extends JButton {
   private boolean isActive = false;
   private boolean isHovered = false;
 
-  public NavButton(String iconPath, String text) {
+  private Class<? extends JPanel> panel;
+  private final NavBar parent;
+
+  public NavButton(NavBar parent, String iconPath, String text, Class<? extends JPanel> panel) {
     super(text);
+    this.panel = panel;
+    this.parent = parent;
 
     setIcon(getIcon(iconPath));
     setIconTextGap(10);
@@ -44,8 +52,9 @@ public class NavButton extends JButton {
     setFont(FontManager.getFont("Inter", Font.PLAIN, 14));
   }
 
-  public NavButton(String iconPath, String text, boolean isActive) {
-    this(iconPath, text);
+  public NavButton(NavBar parent, String iconPath, String text, Class<? extends JPanel> panel,
+                   boolean isActive) {
+    this(parent, iconPath, text, panel);
     setActive(isActive);
   }
 
@@ -103,6 +112,18 @@ public class NavButton extends JButton {
 
       if (!button.isActive) {
         button.setForeground(button.textColor);
+      }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+      NavButton button = (NavButton) e.getSource();
+      button.parent.setNavButtonActive(button);
+      try {
+        App.getInstance().setContent(button.panel.getConstructor().newInstance());
+      } catch (Exception ex) {
+        JOptionPane.showMessageDialog(null, ex.getMessage(), "Error",
+            JOptionPane.ERROR_MESSAGE);
       }
     }
   }

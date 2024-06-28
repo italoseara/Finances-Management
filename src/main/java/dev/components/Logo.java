@@ -13,8 +13,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class LogoPanel extends JPanel {
-  public LogoPanel() {
+public class Logo extends JPanel {
+  public Logo() {
     setBackground(new Color(0, 0, 0, 0));
     setPreferredSize(new Dimension(300, 55));
     setMaximumSize(new Dimension(310, 55));
