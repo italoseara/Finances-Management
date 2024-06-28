@@ -30,8 +30,10 @@ public class App extends JFrame {
     leftPanel = new JPanel();
     leftPanel.setBackground(new Color(0xfafbfb));
     leftPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, new Color(0xe4e4e7)));
-    leftPanel.add(createLogo());
     add(leftPanel);
+
+    JPanel logoPanel = createLogo();
+    leftPanel.add(logoPanel);
 
     // Create the main panel
     mainPanel = new JPanel();
@@ -51,6 +53,7 @@ public class App extends JFrame {
 
         leftPanel.setBounds(0, 0, leftWidth, height);
         mainPanel.setBounds(leftWidth, 0, rightWidth, height);
+        logoPanel.setPreferredSize(new Dimension(leftWidth, 55));
       }
     });
 
@@ -71,7 +74,7 @@ public class App extends JFrame {
     logoPanel.add(leftIcon);
 
     // Create the logo text
-    Font logoFont = fontManager.getFont("Inter", Font.BOLD, 24)
+    Font logoFont = fontManager.getFont("font", Font.BOLD, 24)
         .deriveFont(Map.of(TextAttribute.TRACKING, 0.08)); // Letter spacing
     JLabel logo = new JLabel("Spendwise");
     logo.setFont(logoFont);
@@ -88,8 +91,8 @@ public class App extends JFrame {
 
   private void loadFonts() {
     try {
-      fontManager.loadFont("Inter", "Inter-Regular.ttf", Font.PLAIN);
-      fontManager.loadFont("Inter", "Inter-Bold.ttf", Font.BOLD);
+      fontManager.loadFont("font", "font/Inter-Regular.ttf", Font.PLAIN);
+      fontManager.loadFont("font", "font/Inter-Bold.ttf", Font.BOLD);
     } catch (Exception e) {
       e.printStackTrace();
     }

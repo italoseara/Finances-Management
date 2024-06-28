@@ -5,6 +5,7 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -14,13 +15,14 @@ public class FontManager {
 
   public void loadFont(String fontName, String path, int style)
       throws IOException, FontFormatException {
-    File fontFile = new File(Objects.requireNonNull(getClass().getResource(path)).getFile());
+    InputStream stream =
+        Objects.requireNonNull(getClass().getClassLoader().getResource(path)).openStream();
 
-    if (!fontFile.exists() || !fontFile.isFile() || !fontFile.getName().endsWith(".ttf")) {
-      throw new IllegalArgumentException("Invalid font path: " + fontFile);
+    if (stream == null) {
+      throw new IOException("Font not found: " + path);
     }
 
-    Font font = Font.createFont(Font.TRUETYPE_FONT, fontFile);
+    Font font = Font.createFont(Font.TRUETYPE_FONT, stream);
     GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
     ge.registerFont(font);
 

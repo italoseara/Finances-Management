@@ -14,7 +14,7 @@ public class DefaultTheme extends StandardChartTheme {
     super("JFree");
 
     // Font
-    String fontName = "Inter";
+    String fontName = "font";
     setExtraLargeFont(new Font(fontName, Font.PLAIN, 16));
     setLargeFont(new Font(fontName, Font.BOLD, 15));
     setRegularFont(new Font(fontName, Font.PLAIN, 12));
