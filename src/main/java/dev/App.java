@@ -17,12 +17,12 @@ public class App extends JFrame {
 
   public App() {
     loadFonts();
-
     setTitle("Spendwise - Budget Manager");
     setIconImage(getIcon().getImage());
 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setSize(1280, 720);
+    setSize(1200, 720);
+    setMinimumSize(new Dimension(800, 500));
     setLocationRelativeTo(null);
     setLayout(null);
 
@@ -32,6 +32,7 @@ public class App extends JFrame {
     leftPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, new Color(0xe4e4e7)));
     add(leftPanel);
 
+    // Create the logo panel
     JPanel logoPanel = createLogo();
     leftPanel.add(logoPanel);
 
@@ -47,8 +48,7 @@ public class App extends JFrame {
         int width = getWidth();
         int height = getHeight();
 
-        // 40% of the width or 300px, whichever is smaller
-        int leftWidth = Math.min((int) (width * 0.4f), 300);
+        int leftWidth = 300; // 300px
         int rightWidth = width - leftWidth; // The remaining width
 
         leftPanel.setBounds(0, 0, leftWidth, height);
@@ -63,7 +63,7 @@ public class App extends JFrame {
   private JPanel createLogo() {
     // Create the logo panel
     JPanel logoPanel = new JPanel();
-    logoPanel.setBackground(new Color(0xfafbfb));
+    logoPanel.setBackground(new Color(0, 0, 0, 0));
     logoPanel.setPreferredSize(new Dimension(300, 55));
     logoPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, new Color(0xe4e4e7)));
 
@@ -96,5 +96,9 @@ public class App extends JFrame {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  public static void main(String[] args) {
+    new App();
   }
 }
