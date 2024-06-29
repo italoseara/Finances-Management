@@ -43,7 +43,8 @@ public class DatabaseManager {
           CREATE TABLE IF NOT EXISTS categories (
               id     INTEGER PRIMARY KEY AUTOINCREMENT,
               name   VARCHAR(100) NOT NULL UNIQUE,
-              budget REAL NOT NULL DEFAULT 0
+              budget REAL NOT NULL DEFAULT 0,
+              spent  REAL NOT NULL DEFAULT 0
           );""");
 
       statement.execute("""
@@ -111,7 +112,7 @@ public class DatabaseManager {
 
         int month = random.nextInt(12) + 1;
         int day = random.nextInt(28) + 1;
-        String date = String.format("2021-%02d-%02d 00:00:00", month, day);
+        String date = String.format("2024-%02d-%02d 00:00:00", month, day);
 
         statement.execute(String.format("""
             INSERT INTO transactions (description, amount, category_id, date)
