@@ -12,7 +12,7 @@ import javax.swing.JTable;
 
 public class Transactions extends JPanel {
   private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-  private final SimpleDateFormat displayFormat = new SimpleDateFormat("MM/dd/yyyy");
+  private final SimpleDateFormat displayFormat = new SimpleDateFormat("dd/MM/yyyy");
   private final ModernScrollPane scrollPane;
 
   public Transactions() {
@@ -27,22 +27,34 @@ public class Transactions extends JPanel {
     add(title);
 
     // TODO: Pegar nome da categoria em vez do ID
-    JTable table = DatabaseManager.asTable("SELECT * FROM transactions;");
+    JTable table = DatabaseManager.asTable("""
+            SELECT date, description, amount, name FROM transactions 
+            JOIN categories ON transactions.category_id = categories.id
+            ORDER BY date DESC;
+            """);
 
     scrollPane = new ModernScrollPane(table);
-    scrollPane.setHeader(new String[] {"ID", "Date", "Description", "Amount", "Category"});
-    scrollPane.setColumnsWidth(new double[] {.07, .15, .4, .15, .23});
+    scrollPane.setHeader(new String[] {"Date", "Description", "Amount", "Category"});
+    scrollPane.setColumnsWidth(new double[] {.15, .47, .15, .23});
     scrollPane.setColumnsFormat((Object[] row) -> {
-      if (row[1] instanceof String date) {
+      if (row[0] instanceof String date) {
         try {
-          row[1] = displayFormat.format(df.parse(date));
+          row[0] = displayFormat.format(df.parse(date));
         } catch (Exception e) {
-          row[1] = date;
+          row[0] = date;
         }
       }
 
-      if (row[3] instanceof Double amount) {
-        row[3] = String.format("R$ %.2f", amount);
+      if (row[2] instanceof Double amount) {
+        row[2] = String.format("R$ %.2f", amount);
+      }
+      else{
+        try {
+          double amount = Double.parseDouble(row[2].toString().replace(",", "."));
+          row[2] = String.format("R$ %.2f", amount);
+        }catch (Exception ignored){
+
+        }
       }
 
       return row;
