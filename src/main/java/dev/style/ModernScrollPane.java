@@ -33,6 +33,7 @@ public class ModernScrollPane extends JScrollPane {
     table.setRowHeight(35);
     table.setShowVerticalLines(false);
     table.setColumnSelectionAllowed(false);
+    table.setDefaultEditor(Object.class, null);
     table.setFont(FontManager.getFont("Inter", Font.PLAIN, 14));
     table.setBackground(Color.WHITE);
     table.setForeground(new Color(0x09090b));
