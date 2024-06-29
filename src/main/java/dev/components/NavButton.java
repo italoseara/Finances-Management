@@ -16,7 +16,6 @@ import java.awt.event.MouseEvent;
 import java.util.Objects;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class NavButton extends JButton {

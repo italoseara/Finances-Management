@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Random;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -94,13 +95,24 @@ public class DatabaseManager {
       }
       result.close();
 
-      statement.execute("INSERT INTO categories (name, budget) VALUES ('Food', 200)");
-      statement.execute("INSERT INTO categories (name, budget) VALUES ('Transportation', 100)");
-      statement.execute("INSERT INTO categories (name, budget) VALUES ('Entertainment', 50)");
-      statement.execute("INSERT INTO categories (name, budget) VALUES ('Health', 100)");
-      statement.execute("INSERT INTO categories (name, budget) VALUES ('Education', 50)");
-      statement.execute("INSERT INTO categories (name, budget) VALUES ('Miscellaneous', 50)");
-      statement.execute("INSERT INTO categories (name, budget) VALUES ('Savings', 100)");
+      Random random = new Random();
+      String[] categories =
+          {"Food", "Transportation", "Entertainment", "Health", "Education", "Miscellaneous",
+              "Savings"};
+
+      // Insert fake data into the categories table
+      for (String category : categories) {
+        statement.execute("INSERT INTO categories (name, budget) VALUES ('" + category + "', " +
+            (random.nextInt(1000) + 100) + ");");
+      }
+
+      // Insert fake data into the transactions table
+      for (int i = 0; i < 100; i++) {
+        statement.execute("INSERT INTO transactions (description, amount, category_id) VALUES ('" +
+            "Transaction " + i + "', " + (random.nextInt(100) + 1) + ", " +
+            (random.nextInt(7) + 1) +
+            ");");
+      }
 
       statement.close();
     } catch (SQLException e) {

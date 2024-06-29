@@ -33,7 +33,6 @@ public class ModernScrollPane extends JScrollPane {
     table.setRowHeight(35);
     table.setShowVerticalLines(false);
     table.setColumnSelectionAllowed(false);
-    table.setDefaultEditor(Object.class, null);
     table.setFont(FontManager.getFont("Inter", Font.PLAIN, 14));
     table.setBackground(Color.WHITE);
     table.setForeground(new Color(0x09090b));
@@ -76,6 +75,8 @@ public class ModernScrollPane extends JScrollPane {
 
   public void setRowFormat(ColumnFormatter formatter) {
     var model = (DefaultTableModel) table.getModel();
+
+    // Format each row in the table
     for (int i = 0; i < model.getRowCount(); i++) {
       for (int j = 0; j < model.getColumnCount(); j++) {
         model.setValueAt(formatter.format(model.getDataVector().get(i).toArray())[j], i, j);
