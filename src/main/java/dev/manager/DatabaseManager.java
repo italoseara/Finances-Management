@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
 import java.util.Random;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -107,7 +108,8 @@ public class DatabaseManager {
 
       // Insert fake data into the transactions table
       for (int i = 0; i < 100; i++) {
-        float amount = random.nextFloat() * 100;
+        DecimalFormat df2 = new DecimalFormat("#.##");
+        String amount = df2.format(random.nextDouble() * 1000);
         int categoryId = random.nextInt(categories.length) + 1;
 
         int month = random.nextInt(12) + 1;
@@ -115,8 +117,8 @@ public class DatabaseManager {
         String date = String.format("2024-%02d-%02d 00:00:00", month, day);
 
         statement.execute(String.format("""
-            INSERT INTO transactions (description, amount, category_id, date)
-            VALUES ('Transaction %d', %.1f, %d, '%s');""", i + 1, amount, categoryId, date));
+            INSERT INTO transactions (date, description, amount, category_id)
+            VALUES ('%s', 'Transaction #%d', %s, %d);""", date, i + 1, amount, categoryId));
       }
 
       statement.close();
