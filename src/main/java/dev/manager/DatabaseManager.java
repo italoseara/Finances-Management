@@ -8,6 +8,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import java.util.Random;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -108,7 +110,8 @@ public class DatabaseManager {
 
       // Insert fake data into the transactions table
       for (int i = 0; i < 100; i++) {
-        DecimalFormat df2 = new DecimalFormat("#.##");
+        DecimalFormat df2 = new DecimalFormat("#.#");
+        df2.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ENGLISH));
         String amount = df2.format(random.nextDouble() * 1000);
         int categoryId = random.nextInt(categories.length) + 1;
 
