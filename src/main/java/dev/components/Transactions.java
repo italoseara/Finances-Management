@@ -12,8 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 
 public class Transactions extends JPanel {
-  private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-  private final SimpleDateFormat displayFormat = new SimpleDateFormat("dd/MM/yyyy");
   private final ModernScrollPane scrollPane;
 
   public Transactions() {
@@ -38,16 +36,12 @@ public class Transactions extends JPanel {
     scrollPane.setColumnsWidth(new double[] {.15, .47, .15, .23});
     scrollPane.setColumnsFormat((Object[] row) -> {
       if (row[0] instanceof String date) {
-        try {
-          row[0] = displayFormat.format(df.parse(date));
-        } catch (Exception e) {
-          row[0] = date;
-        }
+        row[0] = Utilities.formatDate(date);
       }
 
       if (!row[2].toString().startsWith("R$")) {
         double amount = Utilities.parseDouble(row[2].toString());
-        row[2] = String.format("R$ %.2f", amount);
+        row[2] = Utilities.formatCurrency(amount);
       }
 
       return row;
