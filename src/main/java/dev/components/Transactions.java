@@ -12,7 +12,7 @@ import javax.swing.JTable;
 
 public class Transactions extends JPanel {
   private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-  private final SimpleDateFormat displayFormat = new SimpleDateFormat("dd/MM/yyyy");
+  private final SimpleDateFormat displayFormat = new SimpleDateFormat("MM/dd/yyyy");
   private final ModernScrollPane scrollPane;
 
   public Transactions() {
