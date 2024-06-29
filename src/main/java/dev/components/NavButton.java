@@ -31,10 +31,10 @@ public class NavButton extends JButton {
   private boolean isActive = false;
   private boolean isHovered = false;
 
-  private Class<? extends JPanel> panel;
+  private final JPanel panel;
   private final NavBar parent;
 
-  public NavButton(NavBar parent, String iconPath, String text, Class<? extends JPanel> panel) {
+  public NavButton(NavBar parent, String iconPath, String text, JPanel panel) {
     super(text);
     this.panel = panel;
     this.parent = parent;
@@ -52,12 +52,6 @@ public class NavButton extends JButton {
     setFont(FontManager.getFont("Inter", Font.PLAIN, 14));
   }
 
-  public NavButton(NavBar parent, String iconPath, String text, Class<? extends JPanel> panel,
-                   boolean isActive) {
-    this(parent, iconPath, text, panel);
-    setActive(isActive);
-  }
-
   private ImageIcon getIcon(String path) {
     Image image = new ImageIcon(Objects.requireNonNull(getClass().getResource(path))).getImage();
     return new ImageIcon(image.getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING));
@@ -67,6 +61,7 @@ public class NavButton extends JButton {
     this.isActive = isActive;
     setBackground(isActive ? activeBackgroundColor : new Color(0, 0, 0, 0));
     setForeground(isActive ? activeColor : isHovered ? hoverTextColor : textColor);
+    App.getInstance().setContent(panel);
   }
 
   @Override
@@ -119,12 +114,6 @@ public class NavButton extends JButton {
     public void mouseClicked(MouseEvent e) {
       NavButton button = (NavButton) e.getSource();
       button.parent.setNavButtonActive(button);
-      try {
-        App.getInstance().setContent(button.panel.getConstructor().newInstance());
-      } catch (Exception ex) {
-        JOptionPane.showMessageDialog(null, ex.getMessage(), "Error",
-            JOptionPane.ERROR_MESSAGE);
-      }
     }
   }
 }

@@ -1,8 +1,10 @@
 package dev;
 
 import dev.components.NavBar;
-import dev.components.Dashboard;
+import dev.components.NavButton;
+import dev.manager.DatabaseManager;
 import dev.manager.FontManager;
+import dev.util.SwingUtil;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Objects;
@@ -13,11 +15,13 @@ public class App extends JFrame {
   private static App instance;
 
   private final NavBar navBar = new NavBar();
-  private JPanel content = new Dashboard();
+  private JPanel content = new JPanel();
 
   public App() {
+    // Load custom fonts
     loadFonts();
 
+    // Initialize the app window
     ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/img/logo.png")));
     setTitle("Spendwise - Budget Manager");
     setIconImage(icon.getImage());
@@ -28,6 +32,7 @@ public class App extends JFrame {
     setLocationRelativeTo(null);
     setLayout(null);
 
+    // Add components to the app window
     add(navBar);
     add(content);
 
@@ -40,8 +45,7 @@ public class App extends JFrame {
       FontManager.loadFont("Inter", "font/Inter-Regular.ttf", Font.PLAIN);
       FontManager.loadFont("Inter", "font/Inter-Bold.ttf", Font.BOLD);
     } catch (Exception e) {
-      JOptionPane.showMessageDialog(null, e.getMessage(), "Error",
-          JOptionPane.ERROR_MESSAGE);
+      SwingUtil.showErrorMessage(e.getMessage());
     }
   }
 
@@ -73,6 +77,13 @@ public class App extends JFrame {
   }
 
   public static void main(String[] args) {
+    // Connect to the SQLite database
+    DatabaseManager.connect("database.db");
+
+    // Create an instance of the app
     instance = new App();
+
+    // Set the dashboard as the default content
+    ((NavButton) instance.navBar.getComponent(1)).setActive(true);
   }
 }

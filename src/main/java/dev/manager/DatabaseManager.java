@@ -1,5 +1,6 @@
 package dev.manager;
 
+import dev.util.SwingUtil;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -10,29 +11,30 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class DatabaseManager {
-  private final Connection connection;
+  private static Connection connection;
 
-  public DatabaseManager(String filename) {
-    if ((connection = connect(filename)) == null) {
-      throw new RuntimeException("Failed to connect to the database.");
+  public static void connect(String filename) {
+    try {
+      connection = DriverManager.getConnection("jdbc:sqlite:" + filename);
+    } catch (SQLException e) {
+      SwingUtil.showErrorMessage(e.getMessage());
+      return;
+    }
+
+    if (connection == null) {
+      SwingUtil.showErrorMessage("Failed to connect to the database.");
+      return;
     }
 
     if (!createTables()) {
-      throw new RuntimeException("Failed to create tables.");
+      SwingUtil.showErrorMessage("Failed to create tables.");
+      return;
     }
 
     populateWithFakeData();
   }
 
-  private Connection connect(String filename) {
-    try {
-      return DriverManager.getConnection("jdbc:sqlite:" + filename);
-    } catch (SQLException e) {
-      return null;
-    }
-  }
-
-  private boolean createTables() {
+  private static boolean createTables() {
     try {
       Statement statement = connection.createStatement();
 
@@ -73,14 +75,14 @@ public class DatabaseManager {
 
       statement.close();
     } catch (SQLException e) {
-      e.printStackTrace();
+      SwingUtil.showErrorMessage(e.getMessage());
       return false;
     }
 
     return true;
   }
 
-  public void populateWithFakeData() {
+  public static void populateWithFakeData() {
     // Populate the categories table with fake data
     try {
       Statement statement = connection.createStatement();
@@ -90,26 +92,30 @@ public class DatabaseManager {
       if (result.getInt(1) > 0) { // If the table is not empty, return
         return;
       }
+      result.close();
 
       statement.execute("INSERT INTO categories (name, budget) VALUES ('Food', 200)");
       statement.execute("INSERT INTO categories (name, budget) VALUES ('Transportation', 100)");
       statement.execute("INSERT INTO categories (name, budget) VALUES ('Entertainment', 50)");
       statement.execute("INSERT INTO categories (name, budget) VALUES ('Health', 100)");
       statement.execute("INSERT INTO categories (name, budget) VALUES ('Education', 50)");
+      statement.execute("INSERT INTO categories (name, budget) VALUES ('Miscellaneous', 50)");
+      statement.execute("INSERT INTO categories (name, budget) VALUES ('Savings', 100)");
+
       statement.close();
     } catch (SQLException e) {
-      e.printStackTrace();
+      SwingUtil.showErrorMessage(e.getMessage());
     }
   }
 
-  public JTable asTable(String query) {
+  public static JTable asTable(String query) {
     try {
+      DefaultTableModel model = new DefaultTableModel();
+
       Statement statement = connection.createStatement();
       ResultSet result = statement.executeQuery(query);
       ResultSetMetaData resultMD = result.getMetaData();
-
       int columns = resultMD.getColumnCount();
-      DefaultTableModel model = new DefaultTableModel();
 
       // Add columns to the model, and set their names
       for (int i = 1; i <= columns; i++) {
@@ -126,9 +132,13 @@ public class DatabaseManager {
         model.addRow(row);
       }
 
+      result.close();
+      statement.close();
+
+      // Create the JTable with the model
       return new JTable(model);
     } catch (SQLException e) {
-      e.printStackTrace();
+      SwingUtil.showErrorMessage(e.getMessage());
       return null;
     }
   }
