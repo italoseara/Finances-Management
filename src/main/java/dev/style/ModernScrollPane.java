@@ -67,14 +67,14 @@ public class ModernScrollPane extends JScrollPane {
     model.setColumnIdentifiers(headers);
   }
 
-  public void setColumnWidths(double[] columnWidths) {
+  public void setColumnsWidth(double[] columnWidths) {
     this.columnWidths = columnWidths;
     for (int i = 0; i < columnWidths.length; i++) {
       table.getColumnModel().getColumn(i).setPreferredWidth((int) (getWidth() * columnWidths[i]));
     }
   }
 
-  public void setRowFormat(ColumnFormatter formatter) {
+  public void setColumnsFormat(ColumnFormatter formatter) {
     var model = (DefaultTableModel) table.getModel();
 
     // Format each row in the table
@@ -88,7 +88,7 @@ public class ModernScrollPane extends JScrollPane {
   @Override
   public void setBounds(int x, int y, int width, int height) {
     super.setBounds(x, y, width, height);
-    setColumnWidths(columnWidths);
+    setColumnsWidth(columnWidths);
   }
 
   private static class ModernScrollBarUI extends BasicScrollBarUI {

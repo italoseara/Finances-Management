@@ -96,9 +96,7 @@ public class DatabaseManager {
       result.close();
 
       Random random = new Random();
-      String[] categories =
-          {"Food", "Transportation", "Entertainment", "Health", "Education", "Miscellaneous",
-              "Savings"};
+      String[] categories = {"Food", "Transportation", "Entertainment", "Health", "Education"};
 
       // Insert fake data into the categories table
       for (String category : categories) {
@@ -108,10 +106,16 @@ public class DatabaseManager {
 
       // Insert fake data into the transactions table
       for (int i = 0; i < 100; i++) {
-        statement.execute("INSERT INTO transactions (description, amount, category_id) VALUES ('" +
-            "Transaction " + i + "', " + (random.nextInt(100) + 1) + ", " +
-            (random.nextInt(7) + 1) +
-            ");");
+        float amount = random.nextFloat() * 100;
+        int categoryId = random.nextInt(categories.length) + 1;
+
+        int month = random.nextInt(12) + 1;
+        int day = random.nextInt(28) + 1;
+        String date = String.format("2021-%02d-%02d 00:00:00", month, day);
+
+        statement.execute(String.format("""
+            INSERT INTO transactions (description, amount, category_id, date)
+            VALUES ('Transaction %d', %.1f, %d, '%s');""", i + 1, amount, categoryId, date));
       }
 
       statement.close();

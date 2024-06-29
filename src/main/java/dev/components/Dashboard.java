@@ -12,5 +12,4 @@ public class Dashboard extends JPanel {
     label.setBounds(0, 0, 100, 100);
     add(label);
   }
-
 }

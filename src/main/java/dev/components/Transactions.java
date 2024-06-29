@@ -31,8 +31,8 @@ public class Transactions extends JPanel {
 
     scrollPane = new ModernScrollPane(table);
     scrollPane.setHeader(new String[] {"ID", "Date", "Description", "Amount", "Category"});
-    scrollPane.setColumnWidths(new double[] {.07, .15, .4, .15, .23});
-    scrollPane.setRowFormat((Object[] row) -> {
+    scrollPane.setColumnsWidth(new double[] {.07, .15, .4, .15, .23});
+    scrollPane.setColumnsFormat((Object[] row) -> {
       if (row[1] instanceof String date) {
         try {
           row[1] = displayFormat.format(df.parse(date));

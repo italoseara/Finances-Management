@@ -1,4 +1,4 @@
-financial.db
+*.db
 
 target/
 !.mvn/wrapper/maven-wrapper.jar
