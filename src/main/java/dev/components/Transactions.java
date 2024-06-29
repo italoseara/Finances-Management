@@ -3,6 +3,7 @@ package dev.components;
 import dev.manager.DatabaseManager;
 import dev.manager.FontManager;
 import dev.style.ModernScrollPane;
+import dev.util.Utilities;
 import java.awt.Color;
 import java.awt.Font;
 import java.text.SimpleDateFormat;
@@ -26,12 +27,11 @@ public class Transactions extends JPanel {
     title.setForeground(new Color(0x111827));
     add(title);
 
-    // TODO: Pegar nome da categoria em vez do ID
     JTable table = DatabaseManager.asTable("""
-            SELECT date, description, amount, name FROM transactions 
-            JOIN categories ON transactions.category_id = categories.id
-            ORDER BY date DESC;
-            """);
+        SELECT date, description, amount, name FROM transactions
+        JOIN categories ON transactions.category_id = categories.id
+        ORDER BY date DESC;
+        """);
 
     scrollPane = new ModernScrollPane(table);
     scrollPane.setHeader(new String[] {"Date", "Description", "Amount", "Category"});
@@ -46,7 +46,7 @@ public class Transactions extends JPanel {
       }
 
       if (!row[2].toString().startsWith("R$")) {
-        double amount = Double.parseDouble(row[2].toString());
+        double amount = Utilities.parseDouble(row[2].toString());
         row[2] = String.format("R$ %.2f", amount);
       }
 
