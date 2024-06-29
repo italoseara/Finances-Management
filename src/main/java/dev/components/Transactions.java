@@ -45,16 +45,9 @@ public class Transactions extends JPanel {
         }
       }
 
-      if (row[2] instanceof Double amount) {
+      if (!row[2].toString().startsWith("R$")) {
+        double amount = Double.parseDouble(row[2].toString());
         row[2] = String.format("R$ %.2f", amount);
-      }
-      else{
-        try {
-          double amount = Double.parseDouble(row[2].toString().replace(",", "."));
-          row[2] = String.format("R$ %.2f", amount);
-        }catch (Exception ignored){
-
-        }
       }
 
       return row;

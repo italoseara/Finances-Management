@@ -4,7 +4,7 @@ import dev.components.NavBar;
 import dev.components.NavButton;
 import dev.manager.DatabaseManager;
 import dev.manager.FontManager;
-import dev.util.SwingUtil;
+import dev.util.Utilities;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Objects;
@@ -45,7 +45,7 @@ public class App extends JFrame {
       FontManager.loadFont("Inter", "font/Inter-Regular.ttf", Font.PLAIN);
       FontManager.loadFont("Inter", "font/Inter-Bold.ttf", Font.BOLD);
     } catch (Exception e) {
-      SwingUtil.showErrorMessage(e.getMessage());
+      Utilities.showErrorMessage(e.getMessage());
     }
   }
 

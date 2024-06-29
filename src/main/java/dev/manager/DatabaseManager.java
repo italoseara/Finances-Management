@@ -1,6 +1,6 @@
 package dev.manager;
 
-import dev.util.SwingUtil;
+import dev.util.Utilities;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -21,17 +21,17 @@ public class DatabaseManager {
     try {
       connection = DriverManager.getConnection("jdbc:sqlite:" + filename);
     } catch (SQLException e) {
-      SwingUtil.showErrorMessage(e.getMessage());
+      Utilities.showErrorMessage(e.getMessage());
       return;
     }
 
     if (connection == null) {
-      SwingUtil.showErrorMessage("Failed to connect to the database.");
+      Utilities.showErrorMessage("Failed to connect to the database.");
       return;
     }
 
     if (!createTables()) {
-      SwingUtil.showErrorMessage("Failed to create tables.");
+      Utilities.showErrorMessage("Failed to create tables.");
       return;
     }
 
@@ -80,7 +80,7 @@ public class DatabaseManager {
 
       statement.close();
     } catch (SQLException e) {
-      SwingUtil.showErrorMessage(e.getMessage());
+      Utilities.showErrorMessage(e.getMessage());
       return false;
     }
 
@@ -110,9 +110,7 @@ public class DatabaseManager {
 
       // Insert fake data into the transactions table
       for (int i = 0; i < 100; i++) {
-        DecimalFormat df2 = new DecimalFormat("#.#");
-        df2.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ENGLISH));
-        String amount = df2.format(random.nextDouble() * 1000);
+        String amount = Utilities.formatDouble(random.nextDouble() * 1000);
         int categoryId = random.nextInt(categories.length) + 1;
 
         int month = random.nextInt(12) + 1;
@@ -126,7 +124,7 @@ public class DatabaseManager {
 
       statement.close();
     } catch (SQLException e) {
-      SwingUtil.showErrorMessage(e.getMessage());
+      Utilities.showErrorMessage(e.getMessage());
     }
   }
 
@@ -160,7 +158,7 @@ public class DatabaseManager {
       // Create the JTable with the model
       return new JTable(model);
     } catch (SQLException e) {
-      SwingUtil.showErrorMessage(e.getMessage());
+      Utilities.showErrorMessage(e.getMessage());
       return null;
     }
   }
