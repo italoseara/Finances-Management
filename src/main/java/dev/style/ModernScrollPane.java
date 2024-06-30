@@ -130,4 +130,5 @@ public class ModernScrollPane extends JScrollPane {
   public interface ColumnFormatter {
     Object[] format(Object[] row);
   }
+
 }

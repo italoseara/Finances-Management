@@ -162,4 +162,15 @@ public class DatabaseManager {
       return null;
     }
   }
+
+  public static void insert(String tableName, String values) {
+    try {
+      Statement statement = connection.createStatement();
+      statement.execute(String.format("INSERT INTO " + tableName + " " + values + ";"));
+      statement.close();
+    } catch (SQLException e) {
+      Utilities.showErrorMessage(e.getMessage());
+    }
+
+  }
 }

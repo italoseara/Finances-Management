@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JOptionPane;
 
 public class Transactions extends JPanel {
   private final ModernScrollPane scrollPane;
@@ -24,6 +25,11 @@ public class Transactions extends JPanel {
     title.setBounds(20, 20, 500, 30);
     title.setForeground(new Color(0x111827));
     add(title);
+
+    Button button = new Button(720, 25, 130, 30, "New transaction");
+    button.setFont(FontManager.getFont("Inter", Font.PLAIN, 12));
+    button.addActionListener(e -> newTransaction());
+    add(button);
 
     JTable table = DatabaseManager.asTable("""
         SELECT date, description, amount, name FROM transactions
@@ -56,4 +62,21 @@ public class Transactions extends JPanel {
     super.setBounds(x, y, width, height);
     scrollPane.setBounds(20, 70, width - 40, height - 90);
   }
+
+  private void newTransaction() {
+    //open a JOptionPane to input the new transaction
+    String description = JOptionPane.showInputDialog("Enter the description:");
+    String amount = JOptionPane.showInputDialog("Enter the amount:");
+    int category = Integer.parseInt(JOptionPane.showInputDialog("Enter the category ID:"));
+
+    //insert the new transaction into the database
+    DatabaseManager.insert("transactions", """
+        (description, amount, category_id)
+        VALUES ('%s', %s, %d);""".formatted(
+          description,
+          amount,
+          category
+        ));
+  }
+
 }
