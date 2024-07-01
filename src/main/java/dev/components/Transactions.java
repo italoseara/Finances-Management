@@ -2,18 +2,14 @@ package dev.components;
 
 import dev.manager.DatabaseManager;
 import dev.manager.FontManager;
-import dev.style.Button;
 import dev.style.DBTable;
 import dev.style.ModernScrollPane;
+import dev.style.RoundedButton;
 import dev.util.Utilities;
 import java.awt.Color;
 import java.awt.Font;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.JTextField;
 
 public class Transactions extends JPanel {
   private final ModernScrollPane scrollPane;
@@ -29,8 +25,13 @@ public class Transactions extends JPanel {
     title.setForeground(new Color(0x111827));
     add(title);
 
-    Button button = new Button(720, 25, 130, 30, "New transaction");
-    button.setFont(FontManager.getFont("Inter", Font.PLAIN, 12));
+    RoundedButton button = new RoundedButton("Add New Transaction", 10);
+    button.setFont(FontManager.getFont("Inter", Font.PLAIN, 14));
+    button.setBackground(Color.WHITE);
+    button.setForeground(new Color(0x111827));
+    button.setHoverColor(new Color(0xf8f4f4));
+    button.setBorderColor(new Color(0xe5e5e8));
+    button.setBounds(600, 20, 280, 35);
     button.addActionListener(e -> new TransactionsModal(this));
     add(button);
 

@@ -10,7 +10,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Random;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class DatabaseManager {
@@ -103,8 +102,11 @@ public class DatabaseManager {
 
       // Insert fake data into the categories table
       for (String category : categories) {
-        statement.execute("INSERT INTO categories (name, budget) VALUES ('" + category + "', " +
-            (random.nextInt(1000) + 100) + ");");
+        double budget = random.nextDouble() * 1000;
+        double spent = random.nextDouble() * budget;
+        statement.execute(
+            "INSERT INTO categories (name, budget, spent) VALUES ('%s', %s, %s);".formatted(
+                category, Utilities.formatDouble(budget), Utilities.formatDouble(spent)));
       }
 
       // Insert fake data into the transactions table
@@ -120,6 +122,15 @@ public class DatabaseManager {
             INSERT INTO transactions (date, description, amount, category_id)
             VALUES ('%s', 'Transaction #%d', %s, %d);
             """.formatted(date, i + 1, amount, categoryId));
+      }
+
+      // Insert fake data into the goals table
+      for (int i = 0; i < 5; i++) {
+        double target = random.nextDouble() * 1000;
+        double current = random.nextDouble() * target;
+        statement.execute("""
+            INSERT INTO goals (name, target, current) VALUES ('Goal #%d', %s, %s);
+            """.formatted(i + 1, Utilities.formatDouble(target), Utilities.formatDouble(current)));
       }
 
       statement.close();

@@ -32,7 +32,7 @@ public class FontManager {
     var sizeMap = styleMap.computeIfAbsent(style, k -> new HashMap<>());
 
     for (int size : new int[] {12, 14, 16, 18, 20, 24, 28, 32, 36, 40}) {
-      sizeMap.put(size, font.deriveFont(style, size));
+      sizeMap.put(size, font.deriveFont(Font.PLAIN, size));
     }
   }
 

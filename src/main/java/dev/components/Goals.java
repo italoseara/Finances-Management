@@ -5,20 +5,14 @@ import dev.manager.FontManager;
 import dev.style.DBTable;
 import dev.style.ModernScrollPane;
 import dev.util.Utilities;
-
 import java.awt.Color;
 import java.awt.Font;
-import java.util.Vector;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.table.TableColumn;
-import javax.swing.table.DefaultTableModel;
 
 public class Goals extends JPanel {
   private final ModernScrollPane scrollPane;
 
-  @SuppressWarnings("unchecked")
   public Goals() {
     setBackground(Color.WHITE);
 
@@ -33,25 +27,14 @@ public class Goals extends JPanel {
     DBTable table = DatabaseManager.queryAsTable("SELECT name, target, current FROM goals");
     assert table != null;
 
-    TableColumn leftColumn = new TableColumn();
-    table.addColumn(leftColumn);
-    leftColumn.setHeaderValue("Left");
-
-    var model = (DefaultTableModel) table.getModel();
-
-    for (int i = 0; i < table.getRowCount(); i++) {
-      String targetString = table.getValueAt(i, 1).toString();
-      String currentString = table.getValueAt(i, 2).toString();
-      double target = Utilities.parseDouble(targetString);
-      double current = Utilities.parseDouble(currentString);
-      double left = (target - current) / target;
-
-      Vector<Double> row = model.getDataVector().elementAt(i);
-      row.add(left);
-    }
+    table.addColumn((Object[] row) -> {
+      double target = Utilities.parseDouble(row[1].toString());
+      double current = Utilities.parseDouble(row[2].toString());
+      return Math.max(0, Math.min(1, current / target));
+    });
 
     scrollPane = new ModernScrollPane(table);
-    scrollPane.setHeader(new String[] {"Name", "Target", "Current", "Left"});
+    scrollPane.setHeader(new String[] {"Name", "Target", "Current", "Status"});
     scrollPane.setColumnsWidth(new double[] {.25, .25, .25, .25});
     scrollPane.setColumnsFormat((Object[] row) -> {
       if (!row[1].toString().startsWith("R$")) {

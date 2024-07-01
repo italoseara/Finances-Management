@@ -1,15 +1,11 @@
 package dev.util;
 
-import java.awt.Color;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 public class Utilities {
   private static final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -56,7 +52,7 @@ public class Utilities {
     return displayFormat.format(date);
   }
 
-  public static String unformatDate(String date) {
+  public static String unformattedDate(String date) {
     try {
       return df.format(displayFormat.parse(date));
     } catch (Exception e) {

@@ -34,23 +34,11 @@ public class Budgets extends JPanel {
     assert table != null;
 
     // Add a new column to the table
-    TableColumn remainingColumn = new TableColumn();
-    table.addColumn(remainingColumn);
-    remainingColumn.setHeaderValue("Remaining");
-
-    var model = (DefaultTableModel) table.getModel();
-
-    // Calculate the remaining budget for each category
-    for (int i = 0; i < table.getRowCount(); i++) {
-      String budgetString = Objects.requireNonNull(table.getValueAt(i, 1)).toString();
-      String spentString = Objects.requireNonNull(table.getValueAt(i, 2)).toString();
-      double budget = Utilities.parseDouble(budgetString);
-      double spent = Utilities.parseDouble(spentString);
-      double remaining = (budget - spent) / budget;
-
-      Vector<Double> row = model.getDataVector().elementAt(i);
-      row.add(remaining);
-    }
+    table.addColumn((Object[] row) -> {
+      double budget = Utilities.parseDouble(row[1].toString());
+      double spent = Utilities.parseDouble(row[2].toString());
+      return Math.max(0, Math.min(1, spent / budget));
+    });
 
     scrollPane = new ModernScrollPane(table);
     scrollPane.setHeader(new String[] {"Category", "Budget", "Spent", "Remaining"});

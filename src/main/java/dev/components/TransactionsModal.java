@@ -2,7 +2,7 @@ package dev.components;
 
 import dev.manager.DatabaseManager;
 import dev.manager.FontManager;
-import dev.style.Button;
+import dev.style.RoundedButton;
 import dev.util.Utilities;
 import java.awt.Color;
 import java.awt.Font;
@@ -91,56 +91,17 @@ public class TransactionsModal extends JDialog {
     add(category);
 
     // Button to save the transaction
-    Button saveButton = getButton();
+    RoundedButton saveButton = new RoundedButton("Save Transaction", 10, 20, 10);
+    saveButton.setFont(font);
+    saveButton.setBackground(Color.WHITE);
+    saveButton.setForeground(new Color(0x111827));
+    saveButton.setHoverColor(new Color(0xf8f4f4));
+    saveButton.setBorderColor(new Color(0xe5e5e8));
+    saveButton.setBounds(20, 290, 360, 35);
+    saveButton.addActionListener(e -> onButtonClick());
     add(saveButton);
 
     setVisible(true);
-  }
-
-  private Button getButton() {
-    Button saveButton = new Button(20, 290, 360, 30, "Save");
-    saveButton.setFont(font);
-    saveButton.addActionListener(e -> {
-      String dateText = date.getText();
-      String descriptionText = description.getText();
-      String amountText = amount.getText();
-      String categoryText = Objects.requireNonNull(category.getSelectedItem()).toString();
-
-      if (dateText.isEmpty() || descriptionText.isEmpty() || amountText.isEmpty()) {
-        Utilities.showErrorMessage("Please fill all fields.");
-        return;
-      }
-
-      if (!Utilities.isValidDate(dateText)) {
-        Utilities.showErrorMessage("Invalid date format.");
-        return;
-      }
-
-      double amountValue = Utilities.parseDouble(amountText);
-      if (amountValue == -1) {
-        Utilities.showErrorMessage("Invalid amount format.");
-        return;
-      }
-
-      int categoryId =
-          DatabaseManager.queryAsInt("SELECT id FROM categories WHERE name = ?;", categoryText);
-      if (categoryId == -1) {
-        Utilities.showErrorMessage("Category not found.");
-        return;
-      }
-
-      String dateTextUnformatted = Utilities.unformatDate(dateText);
-      DatabaseManager.update(
-          "INSERT INTO transactions (date, description, amount, category_id) VALUES (?, ?, ?, ?);",
-          dateTextUnformatted, descriptionText, amountValue, categoryId);
-      dispose();
-
-      JOptionPane.showMessageDialog(null, "Transaction saved successfully.", "Success",
-          JOptionPane.INFORMATION_MESSAGE);
-
-      transactions.refresh();
-    });
-    return saveButton;
   }
 
   private JComboBox<String> getCategoryComboBox() {
@@ -151,10 +112,47 @@ public class TransactionsModal extends JDialog {
       return new JComboBox<>();
     }
 
-    JComboBox<String> category = new JComboBox<>(categories);
+    return new JComboBox<>(categories);
+  }
 
-    // Styling the combo box
+  private void onButtonClick() {
+    String dateText = date.getText();
+    String descriptionText = description.getText();
+    String amountText = amount.getText();
+    String categoryText = Objects.requireNonNull(category.getSelectedItem()).toString();
 
-    return category;
+    if (dateText.isEmpty() || descriptionText.isEmpty() || amountText.isEmpty()) {
+      Utilities.showErrorMessage("Please fill all fields.");
+      return;
+    }
+
+    if (!Utilities.isValidDate(dateText)) {
+      Utilities.showErrorMessage("Invalid date format.");
+      return;
+    }
+
+    double amountValue = Utilities.parseDouble(amountText);
+    if (amountValue == -1) {
+      Utilities.showErrorMessage("Invalid amount format.");
+      return;
+    }
+
+    int categoryId =
+        DatabaseManager.queryAsInt("SELECT id FROM categories WHERE name = ?;", categoryText);
+    if (categoryId == -1) {
+      Utilities.showErrorMessage("Category not found.");
+      return;
+    }
+
+    String dateTextUnformatted = Utilities.unformattedDate(dateText);
+    DatabaseManager.update(
+        "INSERT INTO transactions (date, description, amount, category_id) VALUES (?, ?, ?, ?);",
+        dateTextUnformatted, descriptionText, amountValue, categoryId);
+    dispose();
+
+    JOptionPane.showMessageDialog(null, "Transaction saved successfully.", "Success",
+        JOptionPane.INFORMATION_MESSAGE);
+
+    transactions.refresh();
   }
 }

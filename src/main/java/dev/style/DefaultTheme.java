@@ -1,5 +1,6 @@
 package dev.style;
 
+import dev.manager.FontManager;
 import java.awt.Color;
 import java.awt.Font;
 import org.jfree.chart.StandardChartTheme;
