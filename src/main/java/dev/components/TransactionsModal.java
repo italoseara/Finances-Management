@@ -132,8 +132,8 @@ public class TransactionsModal extends JDialog {
     }
 
     double amountValue = Utilities.parseDouble(amountText);
-    if (amountValue == -1) {
-      Utilities.showErrorMessage("Invalid amount format.");
+    if (amountValue <= 0) {
+      Utilities.showErrorMessage("Invalid amount.");
       return;
     }
 
@@ -149,10 +149,9 @@ public class TransactionsModal extends JDialog {
         "INSERT INTO transactions (date, description, amount, category_id) VALUES (?, ?, ?, ?);",
         dateTextUnformatted, descriptionText, amountValue, categoryId);
     dispose();
+    transactions.refresh();
 
     JOptionPane.showMessageDialog(null, "Transaction saved successfully.", "Success",
         JOptionPane.INFORMATION_MESSAGE);
-
-    transactions.refresh();
   }
 }

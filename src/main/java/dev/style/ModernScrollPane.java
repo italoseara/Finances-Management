@@ -147,4 +147,8 @@ public class ModernScrollPane extends JScrollPane {
 
     setColumnsFormat(columnFormatter);
   }
+
+  public DBTable getTable() {
+    return table;
+  }
 }

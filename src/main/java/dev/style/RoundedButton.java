@@ -31,6 +31,7 @@ public class RoundedButton extends JButton {
     this.left = left;
     this.bottom = bottom;
     this.right = right;
+    setFocusPainted(false);
     setContentAreaFilled(false);
     addMouseListener(new MouseListener());
     setBorder(new RoundedBorder(radius));

@@ -21,15 +21,15 @@ public class Utilities {
   }
 
   public static double parseDouble(String value) {
-    if (value.isBlank()) {
-      return 0;
-    }
-
     if (value.contains(",")) {
       value = value.replace(",", ".");
     }
 
-    return Double.parseDouble(value);
+    try {
+      return Double.parseDouble(value);
+    } catch (Exception e) {
+      return -1;
+    }
   }
 
   public static String formatDouble(double value) {
