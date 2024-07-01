@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 public class Goals extends JPanel {
   private final ModernScrollPane scrollPane;
 
+  @SuppressWarnings("unchecked")
   public Goals() {
     setBackground(Color.WHITE);
 
@@ -50,21 +51,21 @@ public class Goals extends JPanel {
 
     scrollPane = new ModernScrollPane(table);
     scrollPane.setHeader(new String[] {"Name", "Target", "Current", "Left"});
-    scrollPane.setColumnsWidth(new double[] {.30,.25,.25,.20});
+    scrollPane.setColumnsWidth(new double[] {.25, .25, .25, .25});
     scrollPane.setColumnsFormat((Object[] row) -> {
       if (!row[1].toString().startsWith("R$")) {
-          double target = Utilities.parseDouble(row[1].toString());
-          row[1] = Utilities.formatCurrency(target);
+        double target = Utilities.parseDouble(row[1].toString());
+        row[1] = Utilities.formatCurrency(target);
       }
 
       if (!row[2].toString().startsWith("R$")) {
-         double current = Utilities.parseDouble(row[2].toString());
-         row[2] = Utilities.formatCurrency(current);
+        double current = Utilities.parseDouble(row[2].toString());
+        row[2] = Utilities.formatCurrency(current);
       }
 
       if (!row[3].toString().endsWith("%")) {
         double left = (double) row[3];
-        row[3] = String.format("%.0f%%", left * 100);
+        row[3] = "%.0f%%".formatted(left * 100);
       }
 
       return row;

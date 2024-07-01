@@ -7,10 +7,12 @@ import dev.util.Utilities;
 import java.awt.Color;
 import java.awt.Font;
 import java.text.SimpleDateFormat;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 public class Transactions extends JPanel {
   private final ModernScrollPane scrollPane;
@@ -64,19 +66,37 @@ public class Transactions extends JPanel {
   }
 
   private void newTransaction() {
-    //open a JOptionPane to input the new transaction
-    String description = JOptionPane.showInputDialog("Enter the description:");
-    String amount = JOptionPane.showInputDialog("Enter the amount:");
-    int category = Integer.parseInt(JOptionPane.showInputDialog("Enter the category ID:"));
+    JTextField descriptionField = new JTextField();
+    JTextField amountField = new JTextField();
+    JComboBox<String> categoryField = new JComboBox<>();
+    categoryField.setFont(FontManager.getFont("Inter", Font.PLAIN, 14));
+    categoryField.addItem("Select a category");
+    categoryField.addItem("Food");
+    categoryField.addItem("Transportation");
+    categoryField.addItem("Entertainment");
+    categoryField.addItem("Health");
+    categoryField.setSelectedIndex(0);
+
+    Object[] message = {
+        "Description:", descriptionField,
+        "Amount:", amountField,
+        "Category:", categoryField
+    };
+
+    int option = JOptionPane.showConfirmDialog(null, message, "New transaction", JOptionPane.OK_CANCEL_OPTION);
+    if (option != JOptionPane.OK_OPTION) {
+      return;
+    }
+
+    String description = descriptionField.getText();
+    double amount = Utilities.parseDouble(amountField.getText());
+    int category = categoryField.getSelectedIndex();
 
     //insert the new transaction into the database
-    DatabaseManager.insert("transactions", """
-        (description, amount, category_id)
-        VALUES ('%s', %s, %d);""".formatted(
-          description,
-          amount,
-          category
-        ));
+    DatabaseManager.query("""
+        INSERT INTO transactions (description, amount, category_id)
+        VALUES ('%s', %s, %d);
+        """.formatted(description, amount, category));
   }
 
 }

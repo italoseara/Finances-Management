@@ -32,7 +32,7 @@ public class Utilities {
   }
 
   public static String formatCurrency(double value) {
-    return String.format("R$ %.2f", value);
+    return "R$ %.2f".formatted(value);
   }
 
   public static String formatDate(String date) {

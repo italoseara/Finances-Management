@@ -53,7 +53,7 @@ public class Budgets extends JPanel {
 
     scrollPane = new ModernScrollPane(table);
     scrollPane.setHeader(new String[] {"Category", "Budget", "Spent", "Remaining"});
-    scrollPane.setColumnsWidth(new double[] {});
+    scrollPane.setColumnsWidth(new double[] {.25, .25, .25, .25});
     scrollPane.setColumnsFormat((Object[] row) -> {
       if (!row[1].toString().startsWith("R$")) {
         double budget = Utilities.parseDouble(row[1].toString());
@@ -67,7 +67,7 @@ public class Budgets extends JPanel {
 
       if (!row[3].toString().endsWith("%")) {
         double remaining = (double) row[3];
-        row[3] = String.format("%.0f%%", remaining * 100);
+        row[3] = "%.0f%%".formatted(remaining * 100);
       }
 
       return row;

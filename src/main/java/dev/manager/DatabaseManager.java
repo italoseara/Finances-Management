@@ -115,11 +115,12 @@ public class DatabaseManager {
 
         int month = random.nextInt(12) + 1;
         int day = random.nextInt(28) + 1;
-        String date = String.format("2024-%02d-%02d 00:00:00", month, day);
+        String date = "2024-%02d-%02d 00:00:00".formatted(month, day);
 
-        statement.execute(String.format("""
+        statement.execute("""
             INSERT INTO transactions (date, description, amount, category_id)
-            VALUES ('%s', 'Transaction #%d', %s, %d);""", date, i + 1, amount, categoryId));
+            VALUES ('%s', 'Transaction #%d', %s, %d);
+            """.formatted(date, i + 1, amount, categoryId));
       }
 
       statement.close();
@@ -163,14 +164,13 @@ public class DatabaseManager {
     }
   }
 
-  public static void insert(String tableName, String values) {
+  public static void query(String query) {
     try {
       Statement statement = connection.createStatement();
-      statement.execute(String.format("INSERT INTO " + tableName + " " + values + ";"));
+      statement.execute(query);
       statement.close();
     } catch (SQLException e) {
       Utilities.showErrorMessage(e.getMessage());
     }
-
   }
 }
