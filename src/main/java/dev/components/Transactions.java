@@ -8,6 +8,8 @@ import dev.style.RoundedButton;
 import dev.util.Utilities;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.font.TextAttribute;
+import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -24,8 +26,9 @@ public class Transactions extends JPanel {
     setLayout(null);
 
     int entries = DatabaseManager.queryAsInt("SELECT COUNT(*) FROM transactions;");
-    title = new JLabel("Transactions (%d)".formatted(entries));
-    title.setFont(FontManager.getFont("Inter", Font.BOLD, 24));
+    title = new JLabel("Transactions – %d entries".formatted(entries));
+    title.setFont(FontManager.getFont("Inter", Font.BOLD, 24)
+        .deriveFont(Map.of(TextAttribute.TRACKING, 0.04)));
     title.setBounds(20, 20, 500, 30);
     title.setForeground(new Color(0x111827));
     add(title);
@@ -104,7 +107,7 @@ public class Transactions extends JPanel {
 
   public void refresh() {
     int entries = DatabaseManager.queryAsInt("SELECT COUNT(*) FROM transactions;");
-    title.setText("Transactions (%d)".formatted(entries));
+    title.setText("Transactions – %d entries".formatted(entries));
     scrollPane.refresh();
   }
 }

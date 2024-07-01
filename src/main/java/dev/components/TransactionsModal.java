@@ -20,15 +20,14 @@ public class TransactionsModal extends JDialog {
   private final JTextField amount;
   private final JComboBox<String> category;
 
-  private final Font font;
-
   private final Transactions transactions;
 
   public TransactionsModal(Transactions transactions) {
     this.transactions = transactions;
 
     setTitle("New transaction");
-    setSize(400, 350);
+    boolean isWindows = Utilities.isWindows();
+    setSize(400 + (isWindows ? 16 : 0), 350 + (isWindows ? 39 : 0)); // Windows fix
     setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     setLocationRelativeTo(null);
     setModal(true);
@@ -39,7 +38,7 @@ public class TransactionsModal extends JDialog {
     setBackground(Color.WHITE);
     getContentPane().setBackground(Color.WHITE);
 
-    font = FontManager.getFont("Inter", Font.PLAIN, 14);
+    Font font = FontManager.getFont("Inter", Font.PLAIN, 14);
 
     // Date label (right above the date picker)
     JLabel dateLabel = new JLabel("Date:");
