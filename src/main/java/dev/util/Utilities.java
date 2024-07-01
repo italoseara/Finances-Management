@@ -1,10 +1,15 @@
 package dev.util;
 
+import java.awt.Color;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 public class Utilities {
   private static final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -20,6 +25,10 @@ public class Utilities {
   }
 
   public static double parseDouble(String value) {
+    if (value.isBlank()) {
+      return 0;
+    }
+
     if (value.contains(",")) {
       value = value.replace(",", ".");
     }
@@ -40,6 +49,27 @@ public class Utilities {
       return displayFormat.format(df.parse(date));
     } catch (Exception e) {
       return date;
+    }
+  }
+
+  public static String formatDate(Date date) {
+    return displayFormat.format(date);
+  }
+
+  public static String unformatDate(String date) {
+    try {
+      return df.format(displayFormat.parse(date));
+    } catch (Exception e) {
+      return date;
+    }
+  }
+
+  public static boolean isValidDate(String dateText) {
+    try {
+      displayFormat.parse(dateText);
+      return true;
+    } catch (Exception e) {
+      return false;
     }
   }
 }

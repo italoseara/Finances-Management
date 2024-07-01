@@ -2,16 +2,17 @@ package dev.components;
 
 import dev.manager.DatabaseManager;
 import dev.manager.FontManager;
+import dev.style.Button;
+import dev.style.DBTable;
 import dev.style.ModernScrollPane;
 import dev.util.Utilities;
 import java.awt.Color;
 import java.awt.Font;
-import java.text.SimpleDateFormat;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class Transactions extends JPanel {
@@ -30,10 +31,10 @@ public class Transactions extends JPanel {
 
     Button button = new Button(720, 25, 130, 30, "New transaction");
     button.setFont(FontManager.getFont("Inter", Font.PLAIN, 12));
-    button.addActionListener(e -> newTransaction());
+    button.addActionListener(e -> new TransactionsModal(this));
     add(button);
 
-    JTable table = DatabaseManager.asTable("""
+    DBTable table = DatabaseManager.queryAsTable("""
         SELECT date, description, amount, name FROM transactions
         JOIN categories ON transactions.category_id = categories.id
         ORDER BY date DESC;
@@ -65,38 +66,7 @@ public class Transactions extends JPanel {
     scrollPane.setBounds(20, 70, width - 40, height - 90);
   }
 
-  private void newTransaction() {
-    JTextField descriptionField = new JTextField();
-    JTextField amountField = new JTextField();
-    JComboBox<String> categoryField = new JComboBox<>();
-    categoryField.setFont(FontManager.getFont("Inter", Font.PLAIN, 14));
-    categoryField.addItem("Select a category");
-    categoryField.addItem("Food");
-    categoryField.addItem("Transportation");
-    categoryField.addItem("Entertainment");
-    categoryField.addItem("Health");
-    categoryField.setSelectedIndex(0);
-
-    Object[] message = {
-        "Description:", descriptionField,
-        "Amount:", amountField,
-        "Category:", categoryField
-    };
-
-    int option = JOptionPane.showConfirmDialog(null, message, "New transaction", JOptionPane.OK_CANCEL_OPTION);
-    if (option != JOptionPane.OK_OPTION) {
-      return;
-    }
-
-    String description = descriptionField.getText();
-    double amount = Utilities.parseDouble(amountField.getText());
-    int category = categoryField.getSelectedIndex();
-
-    //insert the new transaction into the database
-    DatabaseManager.query("""
-        INSERT INTO transactions (description, amount, category_id)
-        VALUES ('%s', %s, %d);
-        """.formatted(description, amount, category));
+  public void refresh() {
+    scrollPane.refresh();
   }
-
 }

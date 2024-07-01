@@ -2,6 +2,7 @@ package dev.components;
 
 import dev.manager.DatabaseManager;
 import dev.manager.FontManager;
+import dev.style.DBTable;
 import dev.style.ModernScrollPane;
 import dev.util.Utilities;
 import java.awt.Color;
@@ -29,7 +30,7 @@ public class Budgets extends JPanel {
     title.setForeground(new Color(0x111827));
     add(title);
 
-    JTable table = DatabaseManager.asTable("SELECT name, budget, spent FROM categories;");
+    DBTable table = DatabaseManager.queryAsTable("SELECT name, budget, spent FROM categories;");
     assert table != null;
 
     // Add a new column to the table

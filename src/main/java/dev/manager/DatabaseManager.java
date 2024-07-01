@@ -1,15 +1,14 @@
 package dev.manager;
 
+import dev.style.DBTable;
 import dev.util.Utilities;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
 import java.util.Random;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -129,7 +128,73 @@ public class DatabaseManager {
     }
   }
 
-  public static JTable asTable(String query) {
+  public static ResultSet query(String query, Object... params) {
+    try {
+      PreparedStatement statement = connection.prepareStatement(query);
+      for (int i = 0; i < params.length; i++) {
+        statement.setObject(i + 1, params[i]);
+      }
+      return statement.executeQuery();
+    } catch (SQLException e) {
+      Utilities.showErrorMessage(e.getMessage());
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public static void update(String query, Object... params) {
+    try {
+      PreparedStatement statement = connection.prepareStatement(query);
+      for (int i = 0; i < params.length; i++) {
+        statement.setObject(i + 1, params[i]);
+      }
+      statement.executeUpdate();
+      statement.close();
+    } catch (SQLException e) {
+      Utilities.showErrorMessage(e.getMessage());
+    }
+  }
+
+  public static int queryAsInt(String query, Object... params) {
+    try {
+      ResultSet result = query(query, params);
+      if (result != null && result.next()) {
+        return result.getInt(1);
+      }
+      return -1;
+    } catch (SQLException e) {
+      Utilities.showErrorMessage(e.getMessage());
+      return -1;
+    }
+  }
+
+  public static String[] queryAsArray(String query) {
+    try {
+      String countQuery = "SELECT COUNT(*) FROM (" + query.replace(";", "") + ");";
+      Statement statement = connection.createStatement();
+      ResultSet countResult = statement.executeQuery(countQuery);
+
+      countResult.next();
+      int count = countResult.getInt(1);
+
+      String[] arr = new String[count];
+      ResultSet result = statement.executeQuery(query);
+      for (int i = 0; result.next(); i++) {
+        arr[i] = result.getString(1);
+      }
+
+      countResult.close();
+      result.close();
+      statement.close();
+
+      return arr;
+    } catch (SQLException e) {
+      Utilities.showErrorMessage(e.getMessage());
+      return null;
+    }
+  }
+
+  public static DBTable queryAsTable(String query) {
     try {
       DefaultTableModel model = new DefaultTableModel();
 
@@ -157,20 +222,10 @@ public class DatabaseManager {
       statement.close();
 
       // Create the JTable with the model
-      return new JTable(model);
+      return new DBTable(model, query);
     } catch (SQLException e) {
       Utilities.showErrorMessage(e.getMessage());
       return null;
-    }
-  }
-
-  public static void query(String query) {
-    try {
-      Statement statement = connection.createStatement();
-      statement.execute(query);
-      statement.close();
-    } catch (SQLException e) {
-      Utilities.showErrorMessage(e.getMessage());
     }
   }
 }

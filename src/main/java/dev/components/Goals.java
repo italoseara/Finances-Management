@@ -2,6 +2,7 @@ package dev.components;
 
 import dev.manager.DatabaseManager;
 import dev.manager.FontManager;
+import dev.style.DBTable;
 import dev.style.ModernScrollPane;
 import dev.util.Utilities;
 
@@ -29,7 +30,7 @@ public class Goals extends JPanel {
     title.setForeground(new Color(0x111827));
     add(title);
 
-    JTable table = DatabaseManager.asTable("SELECT name, target, current FROM goals");
+    DBTable table = DatabaseManager.queryAsTable("SELECT name, target, current FROM goals");
     assert table != null;
 
     TableColumn leftColumn = new TableColumn();

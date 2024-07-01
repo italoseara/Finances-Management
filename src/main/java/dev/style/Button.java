@@ -1,4 +1,4 @@
-package dev.components;
+package dev.style;
 
 import javax.swing.JButton;
 

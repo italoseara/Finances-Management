@@ -1,5 +1,6 @@
 package dev.style;
 
+import dev.manager.DatabaseManager;
 import dev.manager.FontManager;
 import java.awt.Color;
 import java.awt.Component;
@@ -17,10 +18,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 public class ModernScrollPane extends JScrollPane {
-  private final JTable table;
+  private final DBTable table;
   private double[] columnWidths = new double[0];
+  private ColumnFormatter columnFormatter;
 
-  public ModernScrollPane(JTable table) {
+  public ModernScrollPane(DBTable table) {
     super(table);
     this.table = table;
 
@@ -75,6 +77,7 @@ public class ModernScrollPane extends JScrollPane {
   }
 
   public void setColumnsFormat(ColumnFormatter formatter) {
+    this.columnFormatter = formatter;
     var model = (DefaultTableModel) table.getModel();
 
     // Format each row in the table
@@ -131,4 +134,17 @@ public class ModernScrollPane extends JScrollPane {
     Object[] format(Object[] row);
   }
 
+  public void refresh() {
+    var model = (DefaultTableModel) table.getModel();
+    model.setRowCount(0);
+
+    var data = DatabaseManager.queryAsTable(table.getQuery());
+    assert data != null;
+
+    for (int i = 0; i < data.getRowCount(); i++) {
+      model.addRow(data.getRow(i));
+    }
+
+    setColumnsFormat(columnFormatter);
+  }
 }
