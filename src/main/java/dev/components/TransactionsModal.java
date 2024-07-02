@@ -2,8 +2,9 @@ package dev.components;
 
 import dev.manager.DatabaseManager;
 import dev.manager.FontManager;
-import dev.style.RoundedButton;
-import dev.style.RoundedTextField;
+import dev.style.RoundButton;
+import dev.style.RoundComboBox;
+import dev.style.RoundTextField;
 import dev.util.Utilities;
 import java.awt.Color;
 import java.awt.Font;
@@ -15,10 +16,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 public class TransactionsModal extends JDialog {
-  private final RoundedTextField date;
-  private final RoundedTextField description;
-  private final RoundedTextField amount;
-  private final JComboBox<String> category;
+  private final RoundTextField date;
+  private final RoundTextField description;
+  private final RoundTextField amount;
+  private final RoundComboBox category;
 
   private final Transactions transactions;
 
@@ -47,7 +48,7 @@ public class TransactionsModal extends JDialog {
     add(dateLabel);
 
     // Date picker
-    date = new RoundedTextField(10, 10, 10);
+    date = new RoundTextField(10, 10, 10);
     date.setBounds(20, 50, 360, 37);
     date.setFont(font);
     date.setBackground(Color.WHITE);
@@ -65,7 +66,7 @@ public class TransactionsModal extends JDialog {
     add(descriptionLabel);
 
     // Description text field
-    description = new RoundedTextField(10, 10, 10);
+    description = new RoundTextField(10, 10, 10);
     description.setFont(font);
     description.setBackground(Color.WHITE);
     description.setForeground(new Color(0x111827));
@@ -82,7 +83,7 @@ public class TransactionsModal extends JDialog {
     add(amountLabel);
 
     // Amount text field
-    amount = new RoundedTextField(10, 10, 10);
+    amount = new RoundTextField(10, 10, 10);
     amount.setBounds(20, 184, 360, 37);
     amount.setFont(font);
     amount.setBackground(Color.WHITE);
@@ -100,12 +101,15 @@ public class TransactionsModal extends JDialog {
 
     // Category combo box
     category = getCategoryComboBox();
-    category.setBounds(20, 251, 360, 30);
+    category.setForeground(new Color(0x111827));
+    category.setBackground(Color.WHITE);
+    category.setBorderColor(new Color(0xe5e5e8));
+    category.setBounds(20, 251, 360, 37);
     category.setFont(font);
     add(category);
 
     // Button to save the transaction
-    RoundedButton saveButton = new RoundedButton("Save Transaction", 10, 20, 10);
+    RoundButton saveButton = new RoundButton("Save Transaction", 10, 20, 10);
     saveButton.setFont(font);
     saveButton.setBackground(Color.WHITE);
     saveButton.setForeground(new Color(0x111827));
@@ -118,15 +122,15 @@ public class TransactionsModal extends JDialog {
     setVisible(true);
   }
 
-  private JComboBox<String> getCategoryComboBox() {
+  private RoundComboBox getCategoryComboBox() {
     String[] categories = DatabaseManager.queryAsArray("SELECT name FROM categories;");
     if (categories == null) {
       Utilities.showErrorMessage("No categories found.");
       dispose();
-      return new JComboBox<>();
+      return new RoundComboBox(10);
     }
 
-    return new JComboBox<>(categories);
+    return new RoundComboBox(categories, 10, 10, 10);
   }
 
   private void onButtonClick() {

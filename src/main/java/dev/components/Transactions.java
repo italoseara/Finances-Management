@@ -4,7 +4,7 @@ import dev.manager.DatabaseManager;
 import dev.manager.FontManager;
 import dev.style.DBTable;
 import dev.style.ModernScrollPane;
-import dev.style.RoundedButton;
+import dev.style.RoundButton;
 import dev.util.Utilities;
 import java.awt.Color;
 import java.awt.Font;
@@ -17,8 +17,8 @@ public class Transactions extends JPanel {
   private final JLabel title;
   private final ModernScrollPane scrollPane;
 
-  private final RoundedButton addButton;
-  private final RoundedButton removeButton;
+  private final RoundButton addButton;
+  private final RoundButton removeButton;
 
   public Transactions() {
     setBackground(Color.WHITE);
@@ -33,7 +33,7 @@ public class Transactions extends JPanel {
     title.setForeground(new Color(0x111827));
     add(title);
 
-    addButton = new RoundedButton("Add New", 10);
+    addButton = new RoundButton("Add New", 10);
     addButton.setFont(FontManager.getFont("Inter", Font.PLAIN, 14));
     addButton.setBackground(Color.WHITE);
     addButton.setForeground(new Color(0x111827));
@@ -43,7 +43,7 @@ public class Transactions extends JPanel {
     addButton.addActionListener(e -> new TransactionsModal(this));
     add(addButton);
 
-    removeButton = new RoundedButton("Remove Selected", 10);
+    removeButton = new RoundButton("Remove Selected", 10);
     removeButton.setFont(FontManager.getFont("Inter", Font.PLAIN, 14));
     removeButton.setBackground(Color.WHITE);
     removeButton.setForeground(new Color(0x111827));

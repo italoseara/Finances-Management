@@ -1,17 +1,14 @@
 package dev.style;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.RenderingHints;
 import javax.swing.JTextField;
-import javax.swing.border.AbstractBorder;
 
-public class RoundedTextField extends JTextField {
+public class RoundTextField extends JTextField {
   private final int radius;
-  private Color borderColor = Color.BLACK;
 
   private String placeholder = "";
   private Color placeholderColor = Color.GRAY;
@@ -22,7 +19,7 @@ public class RoundedTextField extends JTextField {
   private final int top;
   private final int bottom;
 
-  public RoundedTextField(int radius, int left, int right, int top, int bottom) {
+  public RoundTextField(int radius, int left, int right, int top, int bottom) {
     this.radius = radius;
     this.left = left;
     this.right = right;
@@ -30,18 +27,18 @@ public class RoundedTextField extends JTextField {
     this.bottom = bottom;
 
     setOpaque(false);
-    setBorder(new RoundedBorder(radius));
+    setBorder(new RoundBorder(radius));
   }
 
-  public RoundedTextField(int radius, int vertical, int horizontal) {
+  public RoundTextField(int radius, int vertical, int horizontal) {
     this(radius, horizontal, horizontal, vertical, vertical);
   }
 
-  public RoundedTextField(int radius) {
+  public RoundTextField(int radius) {
     this(radius, 5, 10);
   }
 
-  public RoundedTextField() {
+  public RoundTextField() {
     this(10);
   }
 
@@ -49,12 +46,9 @@ public class RoundedTextField extends JTextField {
     return radius;
   }
 
-  public Color getBorderColor() {
-    return borderColor;
-  }
-
   public void setBorderColor(Color borderColor) {
-    this.borderColor = borderColor;
+    RoundBorder border = (RoundBorder) getBorder();
+    border.setColor(borderColor);
   }
 
   public String getPlaceholder() {
@@ -95,25 +89,5 @@ public class RoundedTextField extends JTextField {
 
     super.paintComponent(g2);
     g2.dispose();
-  }
-
-  private static class RoundedBorder extends AbstractBorder {
-    private final int radius;
-
-    public RoundedBorder(int radius) {
-      this.radius = radius;
-    }
-
-    @Override
-    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-      RoundedTextField textField = (RoundedTextField) c;
-      Graphics2D g2 = (Graphics2D) g.create();
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-      g2.setColor(textField.getBorderColor());
-      g2.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
-
-      g2.dispose();
-    }
   }
 }

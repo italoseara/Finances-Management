@@ -13,7 +13,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.border.Border;
 
-public class RoundedButton extends JButton {
+public class RoundButton extends JButton {
   private final int radius;
   private final int top;
   private final int left;
@@ -24,7 +24,7 @@ public class RoundedButton extends JButton {
 
   private Color hoverColor;
 
-  public RoundedButton(String text, int radius, int top, int left, int bottom, int right) {
+  public RoundButton(String text, int radius, int top, int left, int bottom, int right) {
     super(text);
     this.radius = radius;
     this.top = top;
@@ -34,14 +34,14 @@ public class RoundedButton extends JButton {
     setFocusPainted(false);
     setContentAreaFilled(false);
     addMouseListener(new MouseListener());
-    setBorder(new RoundedBorder(radius));
+    setBorder(new RoundBorder(radius));
   }
 
-  public RoundedButton(String text, int radius, int horizontal, int vertical) {
+  public RoundButton(String text, int radius, int horizontal, int vertical) {
     this(text, radius, vertical, horizontal, vertical, horizontal);
   }
 
-  public RoundedButton(String text, int radius) {
+  public RoundButton(String text, int radius) {
     this(text, radius, 0, 0);
   }
 
@@ -83,48 +83,22 @@ public class RoundedButton extends JButton {
   }
 
   public void setBorderColor(Color borderColor) {
-    ((RoundedBorder) getBorder()).setColor(borderColor);
+    ((RoundBorder) getBorder()).setColor(borderColor);
   }
 
   private static class MouseListener extends MouseAdapter {
     @Override
     public void mouseEntered(MouseEvent e) {
-      RoundedButton button = (RoundedButton) e.getSource();
+      RoundButton button = (RoundButton) e.getSource();
       button.isHovered = true;
       button.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-      RoundedButton button = (RoundedButton) e.getSource();
+      RoundButton button = (RoundButton) e.getSource();
       button.isHovered = false;
       button.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-    }
-  }
-
-  private static class RoundedBorder implements Border {
-    private final int radius;
-    private Color color = Color.BLACK;
-
-    RoundedBorder(int radius) {
-      this.radius = radius;
-    }
-
-    public Insets getBorderInsets(Component c) {
-      return new Insets(this.radius + 1, this.radius + 1, this.radius + 2, this.radius);
-    }
-
-    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-      g.setColor(color);
-      g.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
-    }
-
-    public boolean isBorderOpaque() {
-      return true;
-    }
-
-    public void setColor(Color color) {
-      this.color = color;
     }
   }
 }
