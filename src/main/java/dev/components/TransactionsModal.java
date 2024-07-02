@@ -3,6 +3,7 @@ package dev.components;
 import dev.manager.DatabaseManager;
 import dev.manager.FontManager;
 import dev.style.RoundedButton;
+import dev.style.RoundedTextField;
 import dev.util.Utilities;
 import java.awt.Color;
 import java.awt.Font;
@@ -12,12 +13,11 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 
 public class TransactionsModal extends JDialog {
-  private final JTextField date;
-  private final JTextField description;
-  private final JTextField amount;
+  private final RoundedTextField date;
+  private final RoundedTextField description;
+  private final RoundedTextField amount;
   private final JComboBox<String> category;
 
   private final Transactions transactions;
@@ -27,7 +27,7 @@ public class TransactionsModal extends JDialog {
 
     setTitle("New transaction");
     boolean isWindows = Utilities.isWindows();
-    setSize(400 + (isWindows ? 16 : 0), 350 + (isWindows ? 39 : 0)); // Windows fix
+    setSize(400 + (isWindows ? 16 : 0), 375 + (isWindows ? 39 : 0)); // Windows fix
     setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     setLocationRelativeTo(null);
     setModal(true);
@@ -47,45 +47,60 @@ public class TransactionsModal extends JDialog {
     add(dateLabel);
 
     // Date picker
-    date = new JTextField();
-    date.setBounds(20, 50, 360, 30);
+    date = new RoundedTextField(10, 10, 10);
+    date.setBounds(20, 50, 360, 37);
     date.setFont(font);
+    date.setBackground(Color.WHITE);
+    date.setForeground(new Color(0x111827));
+    date.setBorderColor(new Color(0xe5e5e8));
+    date.setPlaceholder("DD/MM/YYYY");
+    date.setPlaceholderColor(new Color(0x6b7280));
     date.setText(Utilities.formatDate(new Date()));
     add(date);
 
     // Description label (right above the text field)
     JLabel descriptionLabel = new JLabel("Description:");
-    descriptionLabel.setBounds(20, 80, 360, 30);
+    descriptionLabel.setBounds(20, 87, 360, 30);
     descriptionLabel.setFont(font);
     add(descriptionLabel);
 
     // Description text field
-    description = new JTextField();
-    description.setBounds(20, 110, 360, 30);
+    description = new RoundedTextField(10, 10, 10);
     description.setFont(font);
+    description.setBackground(Color.WHITE);
+    description.setForeground(new Color(0x111827));
+    description.setBorderColor(new Color(0xe5e5e8));
+    description.setBounds(20, 117, 360, 37);
+    description.setPlaceholder("Enter a description");
+    description.setPlaceholderColor(new Color(0x6b7280));
     add(description);
 
     // Amount label (right above the text field)
     JLabel amountLabel = new JLabel("Amount:");
-    amountLabel.setBounds(20, 140, 360, 30);
+    amountLabel.setBounds(20, 154, 360, 30);
     amountLabel.setFont(font);
     add(amountLabel);
 
     // Amount text field
-    amount = new JTextField();
-    amount.setBounds(20, 170, 360, 30);
+    amount = new RoundedTextField(10, 10, 10);
+    amount.setBounds(20, 184, 360, 37);
     amount.setFont(font);
+    amount.setBackground(Color.WHITE);
+    amount.setForeground(new Color(0x111827));
+    amount.setBorderColor(new Color(0xe5e5e8));
+    amount.setPlaceholder("Enter an amount");
+    amount.setPlaceholderColor(new Color(0x6b7280));
     add(amount);
 
     // Category label (right above the combo box)
     JLabel categoryLabel = new JLabel("Category:");
-    categoryLabel.setBounds(20, 200, 360, 30);
+    categoryLabel.setBounds(20, 221, 360, 30);
     categoryLabel.setFont(font);
     add(categoryLabel);
 
     // Category combo box
     category = getCategoryComboBox();
-    category.setBounds(20, 230, 360, 30);
+    category.setBounds(20, 251, 360, 30);
     category.setFont(font);
     add(category);
 
@@ -96,7 +111,7 @@ public class TransactionsModal extends JDialog {
     saveButton.setForeground(new Color(0x111827));
     saveButton.setHoverColor(new Color(0xf8f4f4));
     saveButton.setBorderColor(new Color(0xe5e5e8));
-    saveButton.setBounds(20, 290, 360, 35);
+    saveButton.setBounds(20, 315, 360, 37);
     saveButton.addActionListener(e -> onButtonClick());
     add(saveButton);
 
