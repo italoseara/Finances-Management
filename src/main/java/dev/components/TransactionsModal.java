@@ -10,7 +10,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.util.Date;
 import java.util.Objects;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -166,10 +165,11 @@ public class TransactionsModal extends JDialog {
     DatabaseManager.update(
         "INSERT INTO transactions (date, description, amount, category_id) VALUES (?, ?, ?, ?);",
         dateTextUnformatted, descriptionText, amountValue, categoryId);
-    dispose();
-    transactions.refresh();
 
     JOptionPane.showMessageDialog(null, "Transaction saved successfully.", "Success",
         JOptionPane.INFORMATION_MESSAGE);
+
+    dispose();
+    transactions.refresh();
   }
 }
