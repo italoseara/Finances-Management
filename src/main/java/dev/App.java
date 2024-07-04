@@ -27,7 +27,8 @@ public class App extends JFrame {
     setIconImage(icon.getImage());
 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setSize(1280, 800);
+    boolean isWindows = Utilities.isWindows();
+    setSize(1280 + (isWindows ? 16 : 0), 800 + (isWindows ? 39 : 0)); // Windows fix
     setMinimumSize(new Dimension(800, 500));
     setLocationRelativeTo(null);
     setLayout(null);

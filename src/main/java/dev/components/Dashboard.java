@@ -5,6 +5,8 @@ import dev.chart.LineChart;
 import dev.chart.PieChart;
 import dev.manager.DatabaseManager;
 import dev.manager.FontManager;
+import dev.style.DBTable;
+import dev.style.ModernScrollPane;
 import dev.style.RoundBorder;
 import dev.util.Utilities;
 import java.awt.Color;
@@ -30,6 +32,8 @@ public class Dashboard extends JPanel {
   private final JPanel expansesByCategory;
   private final ChartPanel expansesByCategoryChart;
 
+  private final ModernScrollPane latestTransactions;
+
   public Dashboard() {
     setBackground(Color.WHITE);
     setLayout(null);
@@ -44,12 +48,58 @@ public class Dashboard extends JPanel {
     totalExpenses.add(totalExpensesChart);
     add(totalExpenses);
 
-    expansesByCategory = createCard("Expenses by Category", "Highest: " + getHighestExpenseCategory());
+    expansesByCategory =
+        createCard("Expenses by Category", "Highest: " + getHighestExpenseCategory());
     expansesByCategoryChart = createExpansesByCategoriesChart();
     expansesByCategory.add(expansesByCategoryChart);
     add(expansesByCategory);
 
+    JLabel latestTransactionsLabel = new JLabel("Latest Transactions");
+    latestTransactionsLabel.setFont(FontManager.getFont("Inter", Font.BOLD, 24)
+        .deriveFont(Map.of(TextAttribute.TRACKING, 0.04)));
+    latestTransactionsLabel.setBounds(20, 360, 500, 30);
+    latestTransactionsLabel.setForeground(new Color(0x111827));
+    add(latestTransactionsLabel);
+
+    latestTransactions = createLatestTransactions();
+    add(latestTransactions);
+
     instance = this;
+  }
+
+  private ModernScrollPane createLatestTransactions() {
+    ModernScrollPane scrollPane;
+
+    DBTable table = DatabaseManager.queryAsTable("""
+        SELECT transactions.id, date, description, amount, name FROM transactions
+        JOIN categories ON transactions.category_id = categories.id
+        ORDER BY date DESC
+        LIMIT 9;
+        """);
+
+    scrollPane = new ModernScrollPane(table);
+    scrollPane.setHeader(new String[] {"ID", "Date", "Description", "Amount", "Category"});
+    scrollPane.setColumnsWidth(new double[] {.07, .15, .4, .15, .23});
+    scrollPane.setColumnsFormat((Object[] row) -> {
+      if (row[1] instanceof String date) {
+        row[1] = Utilities.formatDate(date);
+      }
+
+      if (!row[3].toString().startsWith("R$")) {
+        double amount = Utilities.parseDouble(row[3].toString());
+        row[3] = Utilities.formatCurrency(amount);
+        if (amount > 0) {
+          row[3] = "+" + row[3];
+        }
+
+        row[3] = "<html><font color='%s'>%s</font></html>".formatted(
+            row[3].toString().startsWith("-") ? "#FF0000" : "#008000", row[3]);
+      }
+
+      return row;
+    });
+
+    return scrollPane;
   }
 
   @SuppressWarnings("deprecation")
@@ -134,14 +184,9 @@ public class Dashboard extends JPanel {
       Utilities.showErrorMessage("An error occurred while fetching the categories.");
     }
 
-    PieChart chart = new PieChart(new Color[] {
-        new Color(0x2563EB),
-        new Color(0x6D214F),
-        new Color(0xF18701),
-        new Color(0x00A3AD),
-        new Color(0x8C8C8C),
-        new Color(0x1A1A1A),
-    }, dataset);
+    PieChart chart = new PieChart(
+        new Color[] {new Color(0x2563EB), new Color(0x6D214F), new Color(0xF18701),
+            new Color(0x00A3AD), new Color(0x8C8C8C), new Color(0x1A1A1A),}, dataset);
     ChartPanel chartPanel = new ChartPanel(chart);
     chartPanel.setPopupMenu(null);
     chartPanel.setLocation(20, 100);
@@ -207,6 +252,8 @@ public class Dashboard extends JPanel {
 
     expansesByCategory.setBounds(60 + 2 * (width - 80) / 3, 20, (width - 80) / 3, 320);
     expansesByCategoryChart.setBounds(1, 90, (width) / 3 - 30, 210);
+
+    latestTransactions.setBounds(20, 400, width - 40, height - 390);
   }
 
   public void refresh() {
@@ -218,6 +265,10 @@ public class Dashboard extends JPanel {
 
     totalExpensesChart.setChart(createTotalExpansesChart().getChart());
     totalExpensesLabel.setText(getExpenses());
+
+    expansesByCategoryChart.setChart(createExpansesByCategoriesChart().getChart());
+    JLabel expansesByCategoryLabel = (JLabel) expansesByCategory.getComponent(1);
+    expansesByCategoryLabel.setText("Highest: " + getHighestExpenseCategory());
   }
 
   public static Dashboard getInstance() {
