@@ -146,5 +146,6 @@ public class BudgetsModal extends JDialog {
 
     dispose();
     budgets.refresh();
+    Dashboard.getInstance().refresh();
   }
 }

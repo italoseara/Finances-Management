@@ -190,5 +190,6 @@ public class TransactionsModal extends JDialog {
 
     dispose();
     transactions.refresh();
+    Dashboard.getInstance().refresh();
   }
 }

@@ -111,10 +111,10 @@ public class DatabaseManager {
       }
 
       // Insert fake data into the transactions table
-      for (int i = 0; i < 100; i++) {
+      for (int i = 0; i < 200; i++) {
         int categoryId = random.nextInt(categories.length) + 1;
-        String amount = Utilities.formatDouble(categoryId == 1 ? random.nextDouble() * 1000
-            : -random.nextDouble() * 100);
+        String amount = Utilities.formatDouble(
+            categoryId == 1 ? random.nextDouble() * 1000 : -random.nextDouble() * 100);
 
         int month = random.nextInt(12) + 1;
         int day = random.nextInt(28) + 1;
@@ -173,6 +173,19 @@ public class DatabaseManager {
       ResultSet result = query(query, params);
       if (result != null && result.next()) {
         return result.getInt(1);
+      }
+      return -1;
+    } catch (SQLException e) {
+      Utilities.showErrorMessage(e.getMessage());
+      return -1;
+    }
+  }
+
+  public static double queryAsDouble(String query, Object... params) {
+    try {
+      ResultSet result = query(query, params);
+      if (result != null && result.next()) {
+        return result.getDouble(1);
       }
       return -1;
     } catch (SQLException e) {

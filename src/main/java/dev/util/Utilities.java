@@ -84,4 +84,8 @@ public class Utilities {
   public static boolean isWindows() {
     return System.getProperty("os.name").toLowerCase().contains("windows");
   }
+
+  public static String getMonthName(int month) {
+    return new SimpleDateFormat("MMM").format(new Date(2024, month - 1, 1));
+  }
 }

@@ -146,5 +146,6 @@ public class GoalsModal extends JDialog {
 
     dispose();
     goals.refresh();
+    Dashboard.getInstance().refresh();
   }
 }
