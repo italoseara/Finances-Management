@@ -162,18 +162,18 @@ public class Dashboard extends JPanel {
   private ChartPanel createExpansesByCategoriesChart() {
     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-    // Get all categories names and id
-    var categoriesResultSet = DatabaseManager.query("SELECT id, name FROM categories;");
+    // Get the sum of expenses for each category
+    var categoriesResultSet = DatabaseManager.query("""
+        SELECT name, SUM(amount) as total_expenses FROM transactions
+        JOIN categories ON transactions.category_id = categories.id
+        WHERE amount < 0
+        GROUP BY category_id;
+        """);
     assert categoriesResultSet != null;
     try {
       while (categoriesResultSet.next()) {
-        int categoryId = categoriesResultSet.getInt("id");
         String categoryName = categoriesResultSet.getString("name");
-
-        // Get the sum of expenses for each category
-        double expenses = -DatabaseManager.queryAsDouble(
-            "SELECT SUM(amount) FROM transactions WHERE category_id = %d AND amount < 0;".formatted(
-                categoryId));
+        double expenses = -categoriesResultSet.getDouble("total_expenses");
 
         if (expenses != 0) {
           dataset.addValue(expenses, "Expenses", categoryName);
