@@ -33,6 +33,7 @@ public class Dashboard extends JPanel {
   private final ChartPanel expansesByCategoryChart;
 
   private final ModernScrollPane latestTransactions;
+  private final JLabel infoLabel;
 
   public Dashboard() {
     setBackground(Color.WHITE);
@@ -59,6 +60,13 @@ public class Dashboard extends JPanel {
     latestTransactionsLabel.setBounds(20, 360, 500, 30);
     latestTransactionsLabel.setForeground(new Color(0x111827));
     add(latestTransactionsLabel);
+
+    infoLabel = new JLabel("Highest expense: %s | Highest Income: %s".formatted(getHighestExpense(),
+        getHighestIncome()));
+    infoLabel.setFont(FontManager.getFont("Inter", Font.PLAIN, 14));
+    infoLabel.setBounds(20, 385, 500, 30);
+    infoLabel.setForeground(new Color(0x6B7280));
+    add(infoLabel);
 
     latestTransactions = createLatestTransactions();
     add(latestTransactions);
@@ -232,6 +240,16 @@ public class Dashboard extends JPanel {
     return Utilities.formatCurrency(balance);
   }
 
+  private String getHighestExpense() {
+    double expense = -DatabaseManager.queryAsDouble("SELECT MIN(amount) FROM transactions;");
+    return Utilities.formatCurrency(expense);
+  }
+
+  private String getHighestIncome() {
+    double income = DatabaseManager.queryAsDouble("SELECT MAX(amount) FROM transactions;");
+    return Utilities.formatCurrency(income);
+  }
+
   @Override
   public void setBounds(int x, int y, int width, int height) {
     super.setBounds(x, y, width, height);
@@ -246,7 +264,7 @@ public class Dashboard extends JPanel {
     expansesByCategory.setBounds(60 + 2 * (width - 80) / 3, 20, (width - 80) / 3, 320);
     expansesByCategoryChart.setBounds(1, 90, (width) / 3 - 30, 210);
 
-    latestTransactions.setBounds(20, 400, width - 40, height - 390);
+    latestTransactions.setBounds(20, 420, width - 40, height - 390);
   }
 
   public void refresh() {
@@ -262,6 +280,9 @@ public class Dashboard extends JPanel {
     expansesByCategoryChart.setChart(createExpansesByCategoriesChart().getChart());
     JLabel expansesByCategoryLabel = (JLabel) expansesByCategory.getComponent(1);
     expansesByCategoryLabel.setText(getAccountBalance());
+
+    infoLabel.setText("Highest expense: %s | Highest Income: %s".formatted(getHighestExpense(),
+        getHighestIncome()));
   }
 
   public static Dashboard getInstance() {

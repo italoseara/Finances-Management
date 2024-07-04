@@ -59,16 +59,6 @@ public class DatabaseManager {
           );""");
 
       statement.execute("""
-          CREATE TABLE IF NOT EXISTS bills (
-              id          INTEGER PRIMARY KEY AUTOINCREMENT,
-              date        TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-              description VARCHAR(100) NOT NULL,
-              amount      REAL NOT NULL,
-              category_id INTEGER NOT NULL,
-              FOREIGN KEY (category_id) REFERENCES categories(id)
-          );""");
-
-      statement.execute("""
           CREATE TABLE IF NOT EXISTS goals (
               id          INTEGER PRIMARY KEY AUTOINCREMENT,
               name        VARCHAR(100) NOT NULL,
