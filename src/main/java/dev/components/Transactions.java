@@ -18,6 +18,7 @@ public class Transactions extends JPanel {
   private final ModernScrollPane scrollPane;
 
   private final RoundButton addButton;
+  private final RoundButton updateButton;
   private final RoundButton removeButton;
 
   public Transactions() {
@@ -42,6 +43,16 @@ public class Transactions extends JPanel {
     addButton.setBounds(0, 20, 135, 35);
     addButton.addActionListener(e -> new TransactionsModal(this));
     add(addButton);
+
+    updateButton = new RoundButton("Update Selected", 10);
+    updateButton.setFont(FontManager.getFont("Inter", Font.PLAIN, 14));
+    updateButton.setBackground(Color.WHITE);
+    updateButton.setForeground(new Color(0x111827));
+    updateButton.setHoverColor(new Color(0xf8f4f4));
+    updateButton.setBorderColor(new Color(0xe5e5e8));
+    updateButton.setBounds(0, 20, 185, 35);
+    updateButton.addActionListener(e -> onUpdate());
+    add(updateButton);
 
     removeButton = new RoundButton("Remove Selected", 10);
     removeButton.setFont(FontManager.getFont("Inter", Font.PLAIN, 14));
@@ -84,7 +95,24 @@ public class Transactions extends JPanel {
     super.setBounds(x, y, width, height);
     scrollPane.setBounds(20, 70, width - 40, height - 90);
     addButton.setBounds(width - 160, 20, 135, 35);
-    removeButton.setBounds(width - 355, 20, 185, 35);
+    updateButton.setBounds(width - 350, 20, 185, 35);
+    removeButton.setBounds(width - 540, 20, 185, 35);
+  }
+
+  private void onUpdate() {
+    DBTable table = scrollPane.getTable();
+    int[] selectedRows = table.getSelectedRows();
+    if (selectedRows.length != 1) {
+      return;
+    }
+
+    String id = table.getValueAt(selectedRows[0], 0).toString();
+    String date = table.getValueAt(selectedRows[0], 1).toString();
+    String description = table.getValueAt(selectedRows[0], 2).toString();
+    String amount = Utilities.unformattedCurrency(table.getValueAt(selectedRows[0], 3).toString());
+    String category = table.getValueAt(selectedRows[0], 4).toString();
+
+    new TransactionsModal(this, Integer.parseInt(id), date, description, amount, category);
   }
 
   private void onRemove() {
@@ -107,7 +135,7 @@ public class Transactions extends JPanel {
 
   public void refresh() {
     int entries = DatabaseManager.queryAsInt("SELECT COUNT(*) FROM transactions;");
-    title.setText("Transactions – %d entries".formatted(entries));
+    title.setText("Transactions (%d)".formatted(entries));
     scrollPane.refresh();
   }
 }

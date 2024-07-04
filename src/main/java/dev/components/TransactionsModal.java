@@ -22,10 +22,14 @@ public class TransactionsModal extends JDialog {
 
   private final Transactions transactions;
 
-  public TransactionsModal(Transactions transactions) {
-    this.transactions = transactions;
+  private final int id;
 
-    setTitle("New transaction");
+  public TransactionsModal(Transactions transactions, int id, String dateText,
+                           String descriptionText, String amountText, String categoryText) {
+    this.transactions = transactions;
+    this.id = id;
+
+    setTitle(id == -1 ? "New transaction" : "Update transaction");
     boolean isWindows = Utilities.isWindows();
     setSize(400 + (isWindows ? 16 : 0), 375 + (isWindows ? 39 : 0)); // Windows fix
     setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -53,9 +57,9 @@ public class TransactionsModal extends JDialog {
     date.setBackground(Color.WHITE);
     date.setForeground(new Color(0x111827));
     date.setBorderColor(new Color(0xe5e5e8));
-    date.setPlaceholder("DD/MM/YYYY");
+    date.setPlaceholder("Enter the date (DD/MM/YYYY)");
     date.setPlaceholderColor(new Color(0x6b7280));
-    date.setText(Utilities.formatDate(new Date()));
+    date.setText(!dateText.isEmpty() ? dateText : Utilities.formatDate(new Date()));
     add(date);
 
     // Description label (right above the text field)
@@ -71,8 +75,9 @@ public class TransactionsModal extends JDialog {
     description.setForeground(new Color(0x111827));
     description.setBorderColor(new Color(0xe5e5e8));
     description.setBounds(20, 117, 360, 37);
-    description.setPlaceholder("Enter a description");
+    description.setPlaceholder("Enter the description");
     description.setPlaceholderColor(new Color(0x6b7280));
+    description.setText(descriptionText);
     add(description);
 
     // Amount label (right above the text field)
@@ -88,8 +93,9 @@ public class TransactionsModal extends JDialog {
     amount.setBackground(Color.WHITE);
     amount.setForeground(new Color(0x111827));
     amount.setBorderColor(new Color(0xe5e5e8));
-    amount.setPlaceholder("Enter an amount");
+    amount.setPlaceholder("Enter the amount (e.g. 100.00)");
     amount.setPlaceholderColor(new Color(0x6b7280));
+    amount.setText(amountText);
     add(amount);
 
     // Category label (right above the combo box)
@@ -105,10 +111,12 @@ public class TransactionsModal extends JDialog {
     category.setBorderColor(new Color(0xe5e5e8));
     category.setBounds(20, 251, 360, 37);
     category.setFont(font);
+    category.setSelectedItem(categoryText);
     add(category);
 
     // Button to save the transaction
-    RoundButton saveButton = new RoundButton("Save Transaction", 10, 20, 10);
+    RoundButton saveButton =
+        new RoundButton(id == -1 ? "Save Transaction" : "Update Transaction", 10, 20, 10);
     saveButton.setFont(font);
     saveButton.setBackground(Color.WHITE);
     saveButton.setForeground(new Color(0x111827));
@@ -119,6 +127,10 @@ public class TransactionsModal extends JDialog {
     add(saveButton);
 
     setVisible(true);
+  }
+
+  public TransactionsModal(Transactions transactions) {
+    this(transactions, -1, "", "", "", "");
   }
 
   private RoundComboBox getCategoryComboBox() {
@@ -161,15 +173,25 @@ public class TransactionsModal extends JDialog {
       return;
     }
 
+    dispose();
+    transactions.refresh();
+
     String dateTextUnformatted = Utilities.unformattedDate(dateText);
+    if (id != -1) {
+      DatabaseManager.update(
+          "UPDATE transactions SET date = ?, description = ?, amount = ?, category_id = ? WHERE id = ?;",
+          dateTextUnformatted, descriptionText, amountValue, categoryId, id);
+
+      JOptionPane.showMessageDialog(null, "Transaction updated successfully.", "Success",
+          JOptionPane.INFORMATION_MESSAGE);
+      return;
+    }
+
     DatabaseManager.update(
         "INSERT INTO transactions (date, description, amount, category_id) VALUES (?, ?, ?, ?);",
         dateTextUnformatted, descriptionText, amountValue, categoryId);
 
     JOptionPane.showMessageDialog(null, "Transaction saved successfully.", "Success",
         JOptionPane.INFORMATION_MESSAGE);
-
-    dispose();
-    transactions.refresh();
   }
 }

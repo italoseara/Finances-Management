@@ -51,7 +51,7 @@ public class GoalsModal extends JDialog {
     name.setBackground(Color.WHITE);
     name.setForeground(new Color(0x111827));
     name.setBorderColor(new Color(0xe5e5e8));
-    name.setPlaceholder("Name");
+    name.setPlaceholder("Enter the name");
     name.setPlaceholderColor(new Color(0x6b7280));
     name.setText(nameText);
     add(name);
@@ -69,7 +69,7 @@ public class GoalsModal extends JDialog {
     target.setBackground(Color.WHITE);
     target.setForeground(new Color(0x111827));
     target.setBorderColor(new Color(0xe5e5e8));
-    target.setPlaceholder("Target");
+    target.setPlaceholder("Enter the target (e.g. 100.00)");
     target.setPlaceholderColor(new Color(0x6b7280));
     target.setText(targetValue);
     add(target);
@@ -87,7 +87,7 @@ public class GoalsModal extends JDialog {
     current.setBackground(Color.WHITE);
     current.setForeground(new Color(0x111827));
     current.setBorderColor(new Color(0xe5e5e8));
-    current.setPlaceholder("Current");
+    current.setPlaceholder("Enter the current value (e.g. 50.00)");
     current.setPlaceholderColor(new Color(0x6b7280));
     current.setText(currentValue);
     add(current);
@@ -132,21 +132,22 @@ public class GoalsModal extends JDialog {
       return;
     }
 
+    dispose();
+    goals.refresh();
+
     if (id != -1) {
       DatabaseManager.update("UPDATE goals SET name = ?, target = ?, current = ? WHERE id = ?",
           nameText, targetText, currentText, id);
 
       JOptionPane.showMessageDialog(this, "Goal updated successfully.", "Success",
           JOptionPane.INFORMATION_MESSAGE);
-    } else {
-      DatabaseManager.update("INSERT INTO goals (name, target, current) VALUES (?, ?, ?)", nameText,
-          targetText, currentText);
-
-      JOptionPane.showMessageDialog(this, "Goal saved successfully.", "Success",
-          JOptionPane.INFORMATION_MESSAGE);
+      return;
     }
 
-    dispose();
-    goals.refresh();
+    DatabaseManager.update("INSERT INTO goals (name, target, current) VALUES (?, ?, ?)", nameText,
+        targetText, currentText);
+
+    JOptionPane.showMessageDialog(this, "Goal saved successfully.", "Success",
+        JOptionPane.INFORMATION_MESSAGE);
   }
 }

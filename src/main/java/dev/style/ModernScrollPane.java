@@ -143,7 +143,10 @@ public class ModernScrollPane extends JScrollPane {
       return;
     }
 
-    data.addColumn(table.getColumnAdder());
+    var columnAdder = table.getColumnAdder();
+    if (columnAdder != null) {
+      data.addColumn(table.getColumnAdder());
+    }
     for (int i = 0; i < data.getRowCount(); i++) {
       model.addRow(data.getRow(i));
     }
