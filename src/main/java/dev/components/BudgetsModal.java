@@ -2,151 +2,149 @@ package dev.components;
 
 import dev.manager.DatabaseManager;
 import dev.style.RoundButton;
-import dev.style.RoundComboBox;
 import dev.style.RoundTextField;
 import dev.util.Utilities;
+import java.awt.Color;
+import java.awt.Font;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import java.awt.Color;
-import java.awt.Font;
-import java.util.Objects;
 
 public class BudgetsModal extends JDialog {
-    private final RoundComboBox category;
-    private final RoundTextField budget;
-    private final RoundTextField spent;
+  private final RoundTextField category;
+  private final RoundTextField budget;
+  private final RoundTextField spent;
 
-    private final Budgets budgets;
+  private final Budgets budgets;
 
-    public BudgetsModal(Budgets budgets){
-        this.budgets = budgets;
+  private final int id;
 
-        setTitle("New budget");
-        boolean isWindows = Utilities.isWindows();
-        setSize(400 + (isWindows ? 16 : 0), 375 + (isWindows ? 39 : 0)); // Windows fix
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setModal(true);
-        setLayout(null);
+  public BudgetsModal(Budgets budgets, int id, String categoryText, String budgetText,
+                      String spentText) {
+    this.budgets = budgets;
+    this.id = id;
 
-        // Modal styling
-        setResizable(false);
-        setBackground(Color.WHITE);
-        getContentPane().setBackground(Color.WHITE);
+    setTitle(id == -1 ? "New category" : "Update category");
+    boolean isWindows = Utilities.isWindows();
+    setSize(400 + (isWindows ? 16 : 0), 375 + (isWindows ? 39 : 0)); // Windows fix
+    setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    setLocationRelativeTo(null);
+    setModal(true);
+    setLayout(null);
 
-        Font font = new Font("Inter", Font.PLAIN, 14);
+    // Modal styling
+    setResizable(false);
+    setBackground(Color.WHITE);
+    getContentPane().setBackground(Color.WHITE);
 
-        // Category label (right above the category combo box)
-        JLabel categoryLabel = new JLabel("Category:");
-        categoryLabel.setBounds(20, 20, 360, 30);
-        categoryLabel.setFont(font);
-        add(categoryLabel);
+    Font font = new Font("Inter", Font.PLAIN, 14);
 
-        // Category combo box
-        category = getCategoryComboBox();
-        category.setBounds(20, 50, 360, 37);
-        category.setFont(font);
-        category.setBackground(Color.WHITE);
-        category.setForeground(new Color(0x111827));
-        category.setBorderColor(new Color(0xe5e5e8));
-        add(category);
+    // Category label (right above the category combo box)
+    JLabel categoryLabel = new JLabel("Name:");
+    categoryLabel.setBounds(20, 20, 360, 30);
+    categoryLabel.setFont(font);
+    add(categoryLabel);
 
-        // Budget label
-        JLabel budgetLabel = new JLabel("Budget:");
-        budgetLabel.setBounds(20, 100, 360, 30);
-        budgetLabel.setFont(font);
-        add(budgetLabel);
+    // Category combo box
+    category = new RoundTextField(10, 10, 10);
+    category.setBounds(20, 50, 360, 37);
+    category.setFont(font);
+    category.setBackground(Color.WHITE);
+    category.setForeground(new Color(0x111827));
+    category.setBorderColor(new Color(0xe5e5e8));
+    category.setPlaceholder("Enter the category name");
+    category.setText(categoryText);
+    add(category);
 
-        // Budget text field
-        budget = new RoundTextField(10, 10, 10);
-        budget.setBounds(20, 130, 360, 37);
-        budget.setFont(font);
-        budget.setBackground(Color.WHITE);
-        budget.setForeground(new Color(0x111827));
-        budget.setBorderColor(new Color(0xe5e5e8));
-        budget.setPlaceholder("R$ 0.00");
-        budget.setPlaceholderColor(new Color(0x6b7280));
-        add(budget);
+    // Budget label
+    JLabel budgetLabel = new JLabel("Budget:");
+    budgetLabel.setBounds(20, 100, 360, 30);
+    budgetLabel.setFont(font);
+    add(budgetLabel);
 
-        // Spent label
-        JLabel spentLabel = new JLabel("Spent:");
-        spentLabel.setBounds(20, 180, 360, 30);
-        spentLabel.setFont(font);
-        add(spentLabel);
+    // Budget text field
+    budget = new RoundTextField(10, 10, 10);
+    budget.setBounds(20, 130, 360, 37);
+    budget.setFont(font);
+    budget.setBackground(Color.WHITE);
+    budget.setForeground(new Color(0x111827));
+    budget.setBorderColor(new Color(0xe5e5e8));
+    budget.setPlaceholder("Enter the budget amount (R$)");
+    budget.setPlaceholderColor(new Color(0x6b7280));
+    budget.setText(budgetText);
+    add(budget);
 
-        // Spent text field
-        spent = new RoundTextField(10, 10, 10);
-        spent.setBounds(20, 210, 360, 37);
-        spent.setFont(font);
-        spent.setBackground(Color.WHITE);
-        spent.setForeground(new Color(0x111827));
-        spent.setBorderColor(new Color(0xe5e5e8));
-        spent.setPlaceholder("R$ 0.00");
-        spent.setPlaceholderColor(new Color(0x6b7280));
-        add(spent);
+    // Spent label
+    JLabel spentLabel = new JLabel("Spent:");
+    spentLabel.setBounds(20, 180, 360, 30);
+    spentLabel.setFont(font);
+    add(spentLabel);
 
-        // Save button
-        RoundButton saveButton = new RoundButton("Update Budget", 10);
-        saveButton.setFont(font);
-        saveButton.setBackground(Color.WHITE);
-        saveButton.setForeground(new Color(0x111827));
-        saveButton.setHoverColor(new Color(0xf8f4f4));
-        saveButton.setBorderColor(new Color(0xe5e5e8));
-        saveButton.setBounds(20, 265, 360, 37);
-        saveButton.addActionListener(e -> onButtonClick());
-        add(saveButton);
+    // Spent text field
+    spent = new RoundTextField(10, 10, 10);
+    spent.setBounds(20, 210, 360, 37);
+    spent.setFont(font);
+    spent.setBackground(Color.WHITE);
+    spent.setForeground(new Color(0x111827));
+    spent.setBorderColor(new Color(0xe5e5e8));
+    spent.setPlaceholder("Enter the spent amount (R$)");
+    spent.setPlaceholderColor(new Color(0x6b7280));
+    spent.setText(spentText);
+    add(spent);
 
-        setVisible(true);
+    // Save button
+    RoundButton saveButton = new RoundButton("Update Budget", 10);
+    saveButton.setFont(font);
+    saveButton.setBackground(Color.WHITE);
+    saveButton.setForeground(new Color(0x111827));
+    saveButton.setHoverColor(new Color(0xf8f4f4));
+    saveButton.setBorderColor(new Color(0xe5e5e8));
+    saveButton.setBounds(20, 265, 360, 37);
+    saveButton.addActionListener(e -> onButtonClick());
+    add(saveButton);
+
+    setVisible(true);
+  }
+
+  public BudgetsModal(Budgets budgets) {
+    this(budgets, -1, "", "", "");
+  }
+
+  private void onButtonClick() {
+    String categoryText = category.getText();
+    String budgetText = budget.getText();
+    String spentText = spent.getText();
+
+    if (categoryText.isEmpty() || budgetText.isEmpty()) {
+      Utilities.showErrorMessage("Please fill all fields.");
+      return;
     }
 
-    private void onButtonClick() {
-        String categoryText = Objects.requireNonNull(category.getSelectedItem()).toString();
-        String budgetText = budget.getText();
-        String spentText = spent.getText();
-
-        if (categoryText.isEmpty() || budgetText.isEmpty()) {
-            Utilities.showErrorMessage("Please fill all fields.");
-            return;
-        }
-
-        if(spentText.isEmpty()){spentText = "0.00";}
-
-        double budgetValue = Utilities.parseDouble(budgetText);
-        double spentValue = Utilities.parseDouble(spentText);
-
-        if (budgetValue < 0 || spentValue < 0) {
-            Utilities.showErrorMessage("Invalid amount or spent value.");
-            return;
-        }
-
-        int categoryId =
-                DatabaseManager.queryAsInt("SELECT id FROM categories WHERE name = ?;", categoryText);
-        if (categoryId == -1) {
-            Utilities.showErrorMessage("Category not found.");
-            return;
-        }
-
-        // Change the values in the database
-        DatabaseManager.update(
-                "UPDATE categories SET budget = ?, spent = ? WHERE id = ?;",
-                budgetValue, spentValue, categoryId);
-
-        JOptionPane.showMessageDialog(null, "Budget updated successfully.",
-                "Success", JOptionPane.INFORMATION_MESSAGE);
-
-        dispose();
-        budgets.refresh();
+    if (spentText.isEmpty()) {
+      spentText = "0.00";
     }
 
-    private RoundComboBox getCategoryComboBox() {
-        String[] categories = DatabaseManager.queryAsArray("SELECT name FROM categories;");
-        if (categories == null) {
-            Utilities.showErrorMessage("No categories found.");
-            dispose();
-            return new RoundComboBox(10);
-        }
+    double budgetValue = Utilities.parseDouble(budgetText);
+    double spentValue = Utilities.parseDouble(spentText);
 
-        return new RoundComboBox(categories, 10, 10, 10);
+    if (budgetValue < 0 || spentValue < 0) {
+      Utilities.showErrorMessage("Invalid amount or spent value.");
+      return;
     }
+
+    if (id == -1) {
+      DatabaseManager.update("INSERT INTO categories (name, budget, spent) VALUES (?, ?, ?);",
+          categoryText, budgetValue, spentValue);
+      JOptionPane.showMessageDialog(null, "Category added successfully.", "Success",
+          JOptionPane.INFORMATION_MESSAGE);
+    } else {
+      DatabaseManager.update("UPDATE categories SET name = ?, budget = ?, spent = ? WHERE id = ?;",
+          categoryText, budgetValue, spentValue, id);
+      JOptionPane.showMessageDialog(null, "Category updated successfully.", "Success",
+          JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    dispose();
+    budgets.refresh();
+  }
 }

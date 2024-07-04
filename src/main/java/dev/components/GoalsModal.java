@@ -132,22 +132,19 @@ public class GoalsModal extends JDialog {
       return;
     }
 
-    dispose();
-    goals.refresh();
-
     if (id != -1) {
       DatabaseManager.update("UPDATE goals SET name = ?, target = ?, current = ? WHERE id = ?",
           nameText, targetText, currentText, id);
-
       JOptionPane.showMessageDialog(this, "Goal updated successfully.", "Success",
           JOptionPane.INFORMATION_MESSAGE);
-      return;
+    } else {
+      DatabaseManager.update("INSERT INTO goals (name, target, current) VALUES (?, ?, ?)", nameText,
+          targetText, currentText);
+      JOptionPane.showMessageDialog(this, "Goal saved successfully.", "Success",
+          JOptionPane.INFORMATION_MESSAGE);
     }
 
-    DatabaseManager.update("INSERT INTO goals (name, target, current) VALUES (?, ?, ?)", nameText,
-        targetText, currentText);
-
-    JOptionPane.showMessageDialog(this, "Goal saved successfully.", "Success",
-        JOptionPane.INFORMATION_MESSAGE);
+    dispose();
+    goals.refresh();
   }
 }

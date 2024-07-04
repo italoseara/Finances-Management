@@ -173,25 +173,22 @@ public class TransactionsModal extends JDialog {
       return;
     }
 
-    dispose();
-    transactions.refresh();
-
     String dateTextUnformatted = Utilities.unformattedDate(dateText);
     if (id != -1) {
       DatabaseManager.update(
           "UPDATE transactions SET date = ?, description = ?, amount = ?, category_id = ? WHERE id = ?;",
           dateTextUnformatted, descriptionText, amountValue, categoryId, id);
-
       JOptionPane.showMessageDialog(null, "Transaction updated successfully.", "Success",
           JOptionPane.INFORMATION_MESSAGE);
-      return;
+    } else {
+      DatabaseManager.update(
+          "INSERT INTO transactions (date, description, amount, category_id) VALUES (?, ?, ?, ?);",
+          dateTextUnformatted, descriptionText, amountValue, categoryId);
+      JOptionPane.showMessageDialog(null, "Transaction saved successfully.", "Success",
+          JOptionPane.INFORMATION_MESSAGE);
     }
 
-    DatabaseManager.update(
-        "INSERT INTO transactions (date, description, amount, category_id) VALUES (?, ?, ?, ?);",
-        dateTextUnformatted, descriptionText, amountValue, categoryId);
-
-    JOptionPane.showMessageDialog(null, "Transaction saved successfully.", "Success",
-        JOptionPane.INFORMATION_MESSAGE);
+    dispose();
+    transactions.refresh();
   }
 }
