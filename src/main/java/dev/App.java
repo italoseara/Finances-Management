@@ -27,7 +27,7 @@ public class App extends JFrame {
     setIconImage(icon.getImage());
 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setSize(1200, 720);
+    setSize(1280, 800);
     setMinimumSize(new Dimension(800, 500));
     setLocationRelativeTo(null);
     setLayout(null);

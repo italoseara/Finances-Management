@@ -9,10 +9,15 @@ import javax.swing.border.AbstractBorder;
 
 public class RoundBorder extends AbstractBorder {
   private final int radius;
-  private Color borderColor = Color.BLACK;
+  private Color borderColor;
+
+  public RoundBorder(Color borderColor, int radius) {
+    this.borderColor = borderColor;
+    this.radius = radius;
+  }
 
   public RoundBorder(int radius) {
-    this.radius = radius;
+    this(Color.BLACK, radius);
   }
 
   @Override

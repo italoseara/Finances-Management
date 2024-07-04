@@ -2,15 +2,19 @@ package dev.util;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import javax.swing.JOptionPane;
 
+@SuppressWarnings("deprecation")
 public class Utilities {
   private static final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
   private static final SimpleDateFormat displayFormat = new SimpleDateFormat("dd/MM/yyyy");
   private static final DecimalFormat englishDF = new DecimalFormat();
+  private static final NumberFormat moneyFormatter =
+      NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 
   static {
     englishDF.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.US));
@@ -37,11 +41,15 @@ public class Utilities {
   }
 
   public static String formatCurrency(double value) {
-    return "R$ %.2f".formatted(value);
+    return moneyFormatter.format(value);
   }
 
   public static String unformattedCurrency(String value) {
-    return value.replace("R$ ", "").replace(",", ".");
+    try {
+      return moneyFormatter.parse(value).toString();
+    } catch (Exception e) {
+      return value;
+    }
   }
 
   public static String formatDate(String date) {
