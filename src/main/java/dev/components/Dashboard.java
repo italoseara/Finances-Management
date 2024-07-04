@@ -48,8 +48,7 @@ public class Dashboard extends JPanel {
     totalExpenses.add(totalExpensesChart);
     add(totalExpenses);
 
-    expansesByCategory =
-        createCard("Expenses by Category", "Highest: " + getHighestExpenseCategory());
+    expansesByCategory = createCard("Account Balance", getAccountBalance());
     expansesByCategoryChart = createExpansesByCategoriesChart();
     expansesByCategory.add(expansesByCategoryChart);
     add(expansesByCategory);
@@ -228,15 +227,9 @@ public class Dashboard extends JPanel {
     return Utilities.formatCurrency(expenses);
   }
 
-  private String getHighestExpenseCategory() {
-    var resultSet = DatabaseManager.query(
-        "SELECT name FROM categories WHERE id = (SELECT category_id FROM transactions WHERE amount = (SELECT MIN(amount) FROM transactions WHERE amount < 0));");
-    assert resultSet != null;
-    try {
-      return resultSet.getString("name");
-    } catch (SQLException e) {
-      return "N/A";
-    }
+  private String getAccountBalance() {
+    double balance = DatabaseManager.queryAsDouble("SELECT SUM(amount) FROM transactions;");
+    return Utilities.formatCurrency(balance);
   }
 
   @Override
@@ -268,7 +261,7 @@ public class Dashboard extends JPanel {
 
     expansesByCategoryChart.setChart(createExpansesByCategoriesChart().getChart());
     JLabel expansesByCategoryLabel = (JLabel) expansesByCategory.getComponent(1);
-    expansesByCategoryLabel.setText("Highest: " + getHighestExpenseCategory());
+    expansesByCategoryLabel.setText(getAccountBalance());
   }
 
   public static Dashboard getInstance() {
