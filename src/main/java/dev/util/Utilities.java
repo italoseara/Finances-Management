@@ -40,6 +40,10 @@ public class Utilities {
     return "R$ %.2f".formatted(value);
   }
 
+  public static String unformattedCurrency(String value) {
+    return value.replace("R$ ", "").replace(",", ".");
+  }
+
   public static String formatDate(String date) {
     try {
       return displayFormat.format(df.parse(date));

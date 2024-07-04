@@ -24,7 +24,8 @@ public class Goals extends JPanel {
 
     setLayout(null);
 
-    JLabel title = new JLabel("Goals");
+    int entries = DatabaseManager.queryAsInt("SELECT COUNT(*) FROM goals;");
+    JLabel title = new JLabel("Goals (%d)".formatted(entries));
     title.setFont(FontManager.getFont("Inter", Font.BOLD, 24));
     title.setBounds(20, 20, 500, 30);
     title.setForeground(new Color(0x111827));
@@ -47,7 +48,7 @@ public class Goals extends JPanel {
     updateGoalButton.setHoverColor(new Color(0xf8f4f4));
     updateGoalButton.setBorderColor(new Color(0xe5e5e8));
     updateGoalButton.setBounds(0, 20, 135, 35);
-    updateGoalButton.addActionListener(e -> new GoalUpdate(this));
+    updateGoalButton.addActionListener(e -> onUpdate());
     add(updateGoalButton);
 
     deleteGoalButton = new RoundButton("Delete Goal", 10);
@@ -60,32 +61,32 @@ public class Goals extends JPanel {
     deleteGoalButton.addActionListener(e -> onRemove());
     add(deleteGoalButton);
 
-    DBTable table = DatabaseManager.queryAsTable("SELECT name, target, current FROM goals");
+    DBTable table = DatabaseManager.queryAsTable("SELECT id, name, target, current FROM goals");
     assert table != null;
 
     table.addColumn((Object[] row) -> {
-      double target = Utilities.parseDouble(row[1].toString());
-      double current = Utilities.parseDouble(row[2].toString());
+      double target = Utilities.parseDouble(row[2].toString());
+      double current = Utilities.parseDouble(row[3].toString());
       return Math.max(0, Math.min(1, current / target));
     });
 
     scrollPane = new ModernScrollPane(table);
-    scrollPane.setHeader(new String[] {"Name", "Target", "Current", "Status"});
-    scrollPane.setColumnsWidth(new double[] {.25, .25, .25, .25});
+    scrollPane.setHeader(new String[] {"ID", "Name", "Target", "Current", "Status"});
+    scrollPane.setColumnsWidth(new double[] {.07, 0.3, 0.2, 0.2, 0.2});
     scrollPane.setColumnsFormat((Object[] row) -> {
-      if (!row[1].toString().startsWith("R$")) {
-        double target = Utilities.parseDouble(row[1].toString());
-        row[1] = Utilities.formatCurrency(target);
-      }
-
       if (!row[2].toString().startsWith("R$")) {
-        double current = Utilities.parseDouble(row[2].toString());
-        row[2] = Utilities.formatCurrency(current);
+        double target = Utilities.parseDouble(row[2].toString());
+        row[2] = Utilities.formatCurrency(target);
       }
 
-      if (!row[3].toString().endsWith("%")) {
-        double left = (double) row[3];
-        row[3] = "%.0f%%".formatted(left * 100);
+      if (!row[3].toString().startsWith("R$")) {
+        double current = Utilities.parseDouble(row[3].toString());
+        row[3] = Utilities.formatCurrency(current);
+      }
+
+      if (!row[4].toString().endsWith("%")) {
+        double left = (double) row[4];
+        row[4] = "%.0f%%".formatted(left * 100);
       }
 
       return row;
@@ -93,6 +94,24 @@ public class Goals extends JPanel {
 
     scrollPane.setBounds(20, 20, 760, 680);
     add(scrollPane);
+  }
+
+  private void onUpdate() {
+    DBTable table = scrollPane.getTable();
+    int[] selectedRows = table.getSelectedRows();
+    if (selectedRows.length == 0) {
+      return;
+    } else if (selectedRows.length > 1) {
+      Utilities.showErrorMessage("Please select only one goal to update.");
+      return;
+    }
+
+    int row = selectedRows[0];
+    int id = (int) table.getValueAt(row, 0);
+    String name = table.getValueAt(row, 1).toString();
+    String target = Utilities.unformattedCurrency(table.getValueAt(row, 2).toString());
+    String current = Utilities.unformattedCurrency(table.getValueAt(row, 3).toString());
+    new GoalsModal(this, id, name, target, current);
   }
 
   private void onRemove() {

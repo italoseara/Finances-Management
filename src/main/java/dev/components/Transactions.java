@@ -26,7 +26,7 @@ public class Transactions extends JPanel {
     setLayout(null);
 
     int entries = DatabaseManager.queryAsInt("SELECT COUNT(*) FROM transactions;");
-    title = new JLabel("Transactions – %d entries".formatted(entries));
+    title = new JLabel("Transactions (%d)".formatted(entries));
     title.setFont(FontManager.getFont("Inter", Font.BOLD, 24)
         .deriveFont(Map.of(TextAttribute.TRACKING, 0.04)));
     title.setBounds(20, 20, 500, 30);
