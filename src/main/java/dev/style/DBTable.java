@@ -7,6 +7,7 @@ import javax.swing.table.TableColumn;
 
 public class DBTable extends JTable {
   private final String query;
+  private ColumnAdder columnAdder;
 
   public DBTable(DefaultTableModel model, String query) {
     super(model);
@@ -23,18 +24,23 @@ public class DBTable extends JTable {
   }
 
   @SuppressWarnings("unchecked")
-  public void addColumn(ColumnAdder formatter) {
+  public void addColumn(ColumnAdder columnAdder) {
+    this.columnAdder = columnAdder;
     TableColumn column = new TableColumn();
     addColumn(column);
 
     var model = (DefaultTableModel) getModel();
     for (int i = 0; i < getRowCount(); i++) {
       Object[] row = getRow(i);
-      Object value = formatter.format(row);
+      Object value = columnAdder.format(row);
 
       Vector<Object> rowData = model.getDataVector().elementAt(i);
       rowData.add(value);
     }
+  }
+
+  public ColumnAdder getColumnAdder() {
+    return columnAdder;
   }
 
   public interface ColumnAdder {

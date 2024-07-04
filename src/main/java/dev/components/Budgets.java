@@ -18,7 +18,6 @@ public class Budgets extends JPanel {
 
   private final RoundButton changeButton;
 
-  @SuppressWarnings("unchecked")
   public Budgets() {
     setBackground(Color.WHITE);
 
