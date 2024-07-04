@@ -161,7 +161,7 @@ public class TransactionsModal extends JDialog {
     }
 
     double amountValue = Utilities.parseDouble(amountText);
-    if (amountValue <= 0) {
+    if (amountValue == 0) {
       Utilities.showErrorMessage("Invalid amount.");
       return;
     }

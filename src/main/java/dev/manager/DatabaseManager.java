@@ -98,7 +98,8 @@ public class DatabaseManager {
       result.close();
 
       Random random = new Random();
-      String[] categories = {"Food", "Transportation", "Entertainment", "Health", "Education"};
+      String[] categories =
+          {"Income", "Food", "Transportation", "Entertainment", "Health", "Education"};
 
       // Insert fake data into the categories table
       for (String category : categories) {
@@ -111,8 +112,9 @@ public class DatabaseManager {
 
       // Insert fake data into the transactions table
       for (int i = 0; i < 100; i++) {
-        String amount = Utilities.formatDouble(random.nextDouble() * 1000);
         int categoryId = random.nextInt(categories.length) + 1;
+        String amount = Utilities.formatDouble(categoryId == 1 ? random.nextDouble() * 1000
+            : -random.nextDouble() * 100);
 
         int month = random.nextInt(12) + 1;
         int day = random.nextInt(28) + 1;

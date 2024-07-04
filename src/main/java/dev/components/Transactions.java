@@ -81,6 +81,12 @@ public class Transactions extends JPanel {
       if (!row[3].toString().startsWith("R$")) {
         double amount = Utilities.parseDouble(row[3].toString());
         row[3] = Utilities.formatCurrency(amount);
+        if (amount > 0) {
+          row[3] = "+" + row[3];
+        }
+
+        row[3] = "<html><font color='%s'>%s</font></html>".formatted(
+            row[3].toString().startsWith("-") ? "#FF0000" : "#008000", row[3]);
       }
 
       return row;
