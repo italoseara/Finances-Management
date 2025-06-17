@@ -86,6 +86,6 @@ public class Utilities {
   }
 
   public static String getMonthName(int month) {
-    return new SimpleDateFormat("MMM").format(new Date(2024, month - 1, 1));
+    return new SimpleDateFormat("MMM", new Locale("pt", "BR")).format(new Date(2024, month - 1, 1));
   }
 }

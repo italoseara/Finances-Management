@@ -78,6 +78,8 @@ public class ModernScrollPane extends JScrollPane {
 
   public void setColumnsFormat(ColumnFormatter formatter) {
     this.columnFormatter = formatter;
+    if (formatter == null) return;
+
     var model = (DefaultTableModel) table.getModel();
 
     // Format each row in the table
